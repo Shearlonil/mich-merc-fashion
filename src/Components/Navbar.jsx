@@ -92,7 +92,12 @@ const NavBar = () => {
 							</Link>
 						</Nav>
 						<Link to={"/cart"}>
-							<LuShoppingBag size={30} />
+							<button type="button" class="btn position-relative">
+								<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+									0<span class="visually-hidden">unread messages</span>
+								</span>
+								<LuShoppingBag size={30} />
+							</button>
 						</Link>
 					</Navbar.Collapse>
 				</Container>
