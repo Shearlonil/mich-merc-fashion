@@ -19,8 +19,8 @@ const Footer = () => {
 					</div>
 					<div className="col-12 col-md-4 text-center d-flex flex-column justify-content-center align-items-center">
 						<p>
-							Address here... Lorem ipsum dolor sit amet consectetur adipisicing
-							elit. Ducimus, error?
+							Address here... LOREM JOSHUA dolor sit amet consectetur
+							adipisicing elit. Ducimus, error?
 						</p>
 					</div>
 					<ul class="col-12 col-md-4 list-unstyled d-flex justify-content-center gap-3 align-items-center m-0 my-2">
