@@ -4,6 +4,7 @@ import { GrAdd } from "react-icons/gr";
 import { Link } from "react-router-dom";
 import { Card } from "react-bootstrap";
 import ImageComponent from "./ImageComponent";
+import EllipsisText from "./EllipsisText";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -13,19 +14,19 @@ const Wrapper = styled.div`
 const ProductCard = ({ productInfo }) => {
   console.log(productInfo);
 
-  const { id, name, ItemImages, price } = productInfo;
+  const { desc, title, ItemImages, price } = productInfo;
   return (
     <Wrapper>
       <div>
         <Card
-          style={{ height: "450px" }}
+          style={{ minHeight: "450px" }}
           className="gap-2 m-2 border-0 rounded-1 bg-light"
         >
           {/* ItemImages is an array of images attached to the item. Select the first */}
           <ImageComponent image={ItemImages[0]} />
           <Card.Header>
             <h4 className="fw-bold" style={{ color: "#050580" }}>
-              {name}
+              {title}
             </h4>
           </Card.Header>
           <Card.Body className="d-flex flex-column justify-content-between">
@@ -34,7 +35,9 @@ const ProductCard = ({ productInfo }) => {
                 <span>${price}</span>
               </h4>
             </Card.Title>
-            <Card.Text>Sneaker</Card.Text>
+            <Card.Text>
+              <EllipsisText message={desc} maxLength={40} />
+            </Card.Text>
             <div className="d-flex align-items-center justify-content-between">
               <Link
                 to={"/product"}

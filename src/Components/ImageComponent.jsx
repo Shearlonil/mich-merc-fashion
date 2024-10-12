@@ -36,7 +36,7 @@ const ImageComponent = ({ image }) => {
       <LazyLoadImage
         key={image?.id}
         src={`${httpService.baseURL()}/items/imgs/${image?.file_name}`}
-        // width={350}
+        width={"100%"}
         height={200}
         onLoad={handleLoad}
         beforeLoad={handleLoadStarted}
@@ -44,7 +44,7 @@ const ImageComponent = ({ image }) => {
       {!isLoaded && isLoadStarted && (
         <StyledBlurhash
           hash={image.blur_hash}
-          //   width={350}
+          width={"100%"}
           height={200}
           resolutionX={32}
           resolutionY={32}
