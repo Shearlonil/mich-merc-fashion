@@ -6,7 +6,7 @@ const Shop = () => {
   return (
     <div>
       {Object.entries(SHOP_DATA).map(([catTitle, items], index) => {
-        return <CategoryPrev catInfo={items} catTitle={catTitle} />;
+        return <CategoryPrev catInfo={items} catTitle={catTitle} key={index} />;
       })}
     </div>
   );

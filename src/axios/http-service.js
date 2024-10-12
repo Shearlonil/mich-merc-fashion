@@ -40,8 +40,8 @@ function getMapping(urls) {
 }
 
 //  convert a string url to axios post. Useful when trying to perform axios.all request
-function postMapping(urls) {
-  return urls.map((url) => axios.post(url));
+function postMapping(urls, data) {
+  return urls.map((url) => axios.post(url, data));
 }
 
 //  convert a string url to axios put. Useful when trying to perform axios.all request

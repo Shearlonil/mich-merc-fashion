@@ -2,6 +2,7 @@ import React from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import ProductCard from "./ProductCard";
+import CardSkeleton from "./CardSkeleton";
 
 const responsive = {
   superLargeDesktop: {
@@ -26,9 +27,6 @@ const responsive = {
 const CardCarousell = ({ cards, title }) => {
   return (
     <div className="container">
-      <h1 className="display-5 text-light text-center noto-sans-font">
-        {/* <WordSpan>What</WordSpan> we do */}
-      </h1>
       <Carousel
         responsive={responsive}
         infinite={true}
@@ -37,9 +35,11 @@ const CardCarousell = ({ cards, title }) => {
         customTransition="all 1s"
         transitionDuration={500}
       >
-        {cards.slice(0, 5).map((card, index) => (
-          <ProductCard productInfo={card} key={index} />
-        ))}
+        {cards.length === 0
+          ? new Array(4).fill(1).map(() => <CardSkeleton />)
+          : cards.map((card, index) => (
+              <ProductCard productInfo={card} key={index} />
+            ))}
       </Carousel>
     </div>
   );

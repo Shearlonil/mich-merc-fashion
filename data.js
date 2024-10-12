@@ -1,7 +1,7 @@
 import IMAGES from "./src/images/images";
 
 const SHOP_DATA = {
-  shoes: [
+  Shoes: [
     {
       id: 0,
       name: "Brown Brim",
@@ -57,7 +57,7 @@ const SHOP_DATA = {
       price: 16,
     },
   ],
-  glasses: [
+  Glasses: [
     {
       id: 9,
       name: "Adidas NMD",
@@ -107,7 +107,7 @@ const SHOP_DATA = {
       price: 200,
     },
   ],
-  belts: [
+  Belts: [
     {
       id: 17,
       name: "Black Jean Shearling",
@@ -139,7 +139,7 @@ const SHOP_DATA = {
       price: 185,
     },
   ],
-  shirts: [
+  Shirts: [
     {
       id: 22,
       name: "Blue Tanktop",

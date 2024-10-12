@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import IMAGES from "../images/images";
 import { GrAdd } from "react-icons/gr";
 import { Link } from "react-router-dom";
 import { Card } from "react-bootstrap";
+import ImageComponent from "./ImageComponent";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -13,7 +13,7 @@ const Wrapper = styled.div`
 const ProductCard = ({ productInfo }) => {
   console.log(productInfo);
 
-  const { id, name, imageUrl, price } = productInfo;
+  const { id, name, ItemImages, price } = productInfo;
   return (
     <Wrapper>
       <div>
@@ -21,12 +21,8 @@ const ProductCard = ({ productInfo }) => {
           style={{ height: "450px" }}
           className="gap-2 m-2 border-0 rounded-1 bg-light"
         >
-          <Card.Img
-            className="rounded-0"
-            variant="top"
-            src={imageUrl}
-            height={"200px"}
-          />
+          {/* ItemImages is an array of images attached to the item. Select the first */}
+          <ImageComponent image={ItemImages[0]} />
           <Card.Header>
             <h4 className="fw-bold" style={{ color: "#050580" }}>
               {name}
