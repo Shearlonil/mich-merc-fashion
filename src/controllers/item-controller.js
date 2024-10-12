@@ -8,8 +8,18 @@ const findById = async (id) => {
   return await httpService.get(`/applicant/find/${id}`);
 };
 
-const fetchRecentItemsByCat = async (pageSize, cat_id) => {
-  return await httpService.post(`/items/cat/recent`, { pageSize, cat_id });
+const fetchRecentItemsByCatID = async (pageSize, cat_id) => {
+  return await httpService.post(`/items/recent/by-cat-id`, {
+    pageSize,
+    cat_id,
+  });
+};
+
+const fetchRecentItemsByCatName = async (pageSize, cat_name) => {
+  return await httpService.post(`/items/recent/by-cat-name`, {
+    pageSize,
+    cat_name,
+  });
 };
 
 const fetchRecentItems = async (id) => {
@@ -19,6 +29,7 @@ const fetchRecentItems = async (id) => {
 export default {
   fetchAll,
   findById,
-  fetchRecentItemsByCat,
+  fetchRecentItemsByCatID,
+  fetchRecentItemsByCatName,
   fetchRecentItems,
 };

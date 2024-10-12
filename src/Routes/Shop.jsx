@@ -1,12 +1,12 @@
 import React from "react";
 import CategoryPrev from "../Components/CategoryPrev";
-import { SHOP_DATA } from "../../data";
+import { categoryMap } from "../../data";
 
 const Shop = () => {
   return (
     <div>
-      {Object.entries(SHOP_DATA).map(([catTitle, items], index) => {
-        return <CategoryPrev catInfo={items} catTitle={catTitle} key={index} />;
+      {categoryMap.map((catTitle, index) => {
+        return <CategoryPrev catTitle={catTitle} key={index} />;
       })}
     </div>
   );

@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { GrAdd } from "react-icons/gr";
 import { Link } from "react-router-dom";
 import { Card } from "react-bootstrap";
 import ImageComponent from "./ImageComponent";
@@ -12,9 +11,8 @@ const Wrapper = styled.div`
 `;
 
 const ProductCard = ({ productInfo }) => {
-  console.log(productInfo);
-
   const { desc, title, ItemImages, price } = productInfo;
+
   return (
     <Wrapper>
       <div>
@@ -25,18 +23,18 @@ const ProductCard = ({ productInfo }) => {
           {/* ItemImages is an array of images attached to the item. Select the first */}
           <ImageComponent image={ItemImages[0]} />
           <Card.Header>
-            <h4 className="fw-bold" style={{ color: "#050580" }}>
+            <h4 className="" style={{ color: "#050580" }}>
               {title}
             </h4>
           </Card.Header>
           <Card.Body className="d-flex flex-column justify-content-between">
             <Card.Title className="">
               <h4>
-                <span>${price}</span>
+                <span>£{price}</span>
               </h4>
             </Card.Title>
             <Card.Text>
-              <EllipsisText message={desc} maxLength={40} />
+              <EllipsisText message={desc} maxLength={40} clickable={false} />
             </Card.Text>
             <div className="d-flex align-items-center justify-content-between">
               <Link
@@ -45,9 +43,6 @@ const ProductCard = ({ productInfo }) => {
               >
                 View
               </Link>
-              <button className="btn btn-outline-danger rounded-circle d-flex align-items-center">
-                <GrAdd size={"20"} />
-              </button>
             </div>
           </Card.Body>
         </Card>

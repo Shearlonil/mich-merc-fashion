@@ -9,9 +9,8 @@ import itemController from "../controllers/item-controller";
 import handleErrMsg from "../Utils/error-handler";
 import { CardTitle } from "react-bootstrap";
 
-const CategoryPrev = ({ catInfo, catTitle }) => {
-  const [networkRequest, setNetworkRequest] = useState(false);
-  const [catItems, setCatItems] = useState([]);
+const CategoryPrev = ({ catTitle }) => {
+  const [catItems, setCatItems] = useState(null);
 
   useEffect(() => {
     initialize();
@@ -19,13 +18,13 @@ const CategoryPrev = ({ catInfo, catTitle }) => {
 
   const initialize = async () => {
     try {
-      setNetworkRequest(true);
-      const response = await itemController.fetchRecentItemsByCat(8, 1);
+      const response = await itemController.fetchRecentItemsByCatName(
+        8,
+        catTitle
+      );
 
       setCatItems(response.data);
-      setNetworkRequest(false);
     } catch (error) {
-      setNetworkRequest(false);
       // display error message
       toast.error(handleErrMsg(error).msg);
     }
@@ -35,7 +34,7 @@ const CategoryPrev = ({ catInfo, catTitle }) => {
     <div className="container mt-4">
       <Link className="btn" to={`${catTitle}`}>
         <h2 className="text-black-emphasis display-5 fw-normal">
-          {capitalizeFirstLetter(catTitle)}
+          {catTitle}
           <BiLinkAlt
             size={35}
             className="text-secondary bg-light rounded-circle"
@@ -47,7 +46,7 @@ const CategoryPrev = ({ catInfo, catTitle }) => {
         {<CardCarousell cards={catItems} key={CardTitle} />}
         <div className="text-center">
           <Link
-            className="btn btn-outline-danger  rounded-pill poppins"
+            className="btn btn-outline-danger rounded-pill poppins"
             to={`${catTitle}`}
           >
             View More

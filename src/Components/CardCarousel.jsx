@@ -24,7 +24,22 @@ const responsive = {
   },
 };
 
-const CardCarousell = ({ cards, title }) => {
+const noItemFound = () => {
+  const cardProp = {
+    desc: "",
+    title: "No Item Found",
+    ItemImages: [
+      {
+        file_name: "logo.png",
+        blur_hash: "UZA2ooV?V=RQp3X9o#oyM+n$jbWXVpjbWCa|",
+      },
+    ],
+    price: 0,
+  };
+  return <ProductCard productInfo={cardProp} />;
+};
+
+const CardCarousell = ({ cards }) => {
   return (
     <div className="container">
       <Carousel
@@ -35,8 +50,10 @@ const CardCarousell = ({ cards, title }) => {
         customTransition="all 1s"
         transitionDuration={500}
       >
-        {cards.length === 0
+        {cards === null
           ? new Array(4).fill(1).map(() => <CardSkeleton />)
+          : cards.length === 0
+          ? noItemFound()
           : cards.map((card, index) => (
               <ProductCard productInfo={card} key={index} />
             ))}
