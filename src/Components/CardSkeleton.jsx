@@ -1,7 +1,6 @@
 import React from "react";
 import { Card } from "react-bootstrap";
 import Skeleton from "react-loading-skeleton";
-import { Link } from "react-router-dom";
 
 const CardSkeleton = () => {
   /*  refs: WITH REACT SUSPENSE
