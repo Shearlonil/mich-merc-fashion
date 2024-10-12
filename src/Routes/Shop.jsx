@@ -5,8 +5,8 @@ import { SHOP_DATA } from "../../data";
 const Shop = () => {
   return (
     <div>
-      {Object.entries(SHOP_DATA).map(([cat, items], index) => {
-        return <CategoryPrev catInfo={items} catTitle={cat} />;
+      {Object.entries(SHOP_DATA).map(([catTitle, items], index) => {
+        return <CategoryPrev catInfo={items} catTitle={catTitle} />;
       })}
     </div>
   );
