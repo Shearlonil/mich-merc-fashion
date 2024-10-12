@@ -5,8 +5,11 @@ import { IoLogoInstagram, IoLogoWhatsapp } from "react-icons/io";
 import { SiGmail } from "react-icons/si";
 import { Link } from "react-router-dom";
 import IMAGES from "../images/images";
+import { useAuth } from "../app-context/auth-user-context";
 
 const Footer = () => {
+  const { getCurrentYear } = useAuth();
+
   return (
     <div className="bg-light mt-auto" style={{ height: "200px" }}>
       <div className="container">
@@ -15,7 +18,7 @@ const Footer = () => {
             <Link to="/" className="d-flex justify-content-center">
               <img className="" src={IMAGES.logo} alt="logo" width={"100px"} />
             </Link>
-            <p className="mb-0">&copy; 2024 Company, Inc</p>
+            <p className="mb-0">&copy; {getCurrentYear()} Company, Inc</p>
           </div>
           <div className="col-12 col-md-4 text-center d-flex flex-column justify-content-center align-items-center">
             <p>
