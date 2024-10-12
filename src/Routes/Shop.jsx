@@ -1,19 +1,15 @@
-import React from 'react'
-import Category from "./Category";
-import CategoryPrev from '../Components/CategoryPrev'
-import { categoryMap, SHOP_DATA } from '../../data'
+import React from "react";
+import CategoryPrev from "../Components/CategoryPrev";
+import { SHOP_DATA } from "../../data";
 
 const Shop = () => {
   return (
-		<div>
-			{/* {categoryMap.map((title, index) => (
-        <CategoryPrev key={index} catTitle={title}/>
-      ))} */}
+    <div>
       {Object.entries(SHOP_DATA).map(([cat, items], index) => {
-        return <CategoryPrev catInfo={items} catTitle={cat} />
+        return <CategoryPrev catInfo={items} catTitle={cat} />;
       })}
-		</div>
-	);
-}
+    </div>
+  );
+};
 
-export default Shop
+export default Shop;
