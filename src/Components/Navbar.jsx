@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Container,
-  Dropdown,
-  DropdownButton,
-  Nav,
-  Navbar,
-} from "react-bootstrap";
+import { Container, Dropdown, Nav, Navbar } from "react-bootstrap";
 import IMAGES from "../images/images";
 import { Link, useNavigate } from "react-router-dom";
 import { LuShoppingBag } from "react-icons/lu";
