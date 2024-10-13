@@ -76,7 +76,6 @@ const Category = () => {
 
       //  check if the request to fetch indstries doesn't fail before setting values to display
       if (response && response.data) {
-        // setPagedData(response.data);
         setMaxID(response.data[response.data.length - 1].id);
         setCatItems([...catItems, ...response.data]);
         /*  normally, we would call setPagedData(response.data.catItems) here but that isn't necessary because calling setCurrentPage(pageNumber)
