@@ -25,11 +25,12 @@ const ProductCard = ({ productInfo }) => {
           <Card.Header>
             <h4 className="fw-bold" style={{ color: "#050580" }}>
               <EllipsisText
-                style={{ fontFamily: "serif" }}
+                styles={{ style: { fontFamily: "serif" } }}
                 message={title}
                 maxLength={30}
                 clickable={false}
               />
+              {/* {title} */}
             </h4>
           </Card.Header>
           <Card.Body className="d-flex flex-column justify-content-between">

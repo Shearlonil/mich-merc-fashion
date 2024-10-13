@@ -35,6 +35,20 @@ const fetchRecentItemsByCatName = async (pageSize, cat_name) => {
   });
 };
 
+const paginateItemsByCatName = async (
+  pageSize,
+  cat_name,
+  max_item_id,
+  pageSpan
+) => {
+  return await httpService.post(`/items/paginate/by-cat-name`, {
+    pageSize,
+    cat_name,
+    max_item_id,
+    pageSpan,
+  });
+};
+
 const fetchRecentItems = async (id) => {
   return await httpService.download(`/applicant/cv/${id}`);
 };
@@ -44,5 +58,6 @@ export default {
   findById,
   fetchRecentItemsByCatID,
   fetchRecentItemsByCatName,
+  paginateItemsByCatName,
   fetchRecentItems,
 };

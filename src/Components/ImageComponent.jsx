@@ -4,23 +4,23 @@ import httpService from "../axios/http-service";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import styled from "styled-components";
 
-const ImageComponent = ({ image }) => {
-  /*  refs: 
+/*  refs: 
         https://hamon.in/blog/blurhash/
         https://github.com/ipenywis/img-lazy-loading/tree/master/src    OR  https://www.youtube.com/watch?v=8viWcH5bUE4
     */
 
-  const ImageWrapper = styled.div`
-    position: relative;
-  `;
+const ImageWrapper = styled.div`
+  position: relative;
+`;
 
-  const StyledBlurhash = styled(Blurhash)`
-    z-index: 20;
-    position: absolute !important;
-    top: 0;
-    left: 0;
-  `;
+const StyledBlurhash = styled(Blurhash)`
+  z-index: 20;
+  position: absolute !important;
+  top: 0;
+  left: 0;
+`;
 
+const ImageComponent = ({ image }) => {
   const [isLoaded, setLoaded] = useState(false);
   const [isLoadStarted, setLoadStarted] = useState(false);
 

@@ -2,11 +2,11 @@ import { Pagination } from "react-bootstrap";
 import { useState, useEffect } from "react";
 
 export default function PaginationLite(props) {
-  /* itemCount is the total number of items to be displayed in the table
+  /*    itemCount is the total number of items to be displayed in the table
         pageSize is the number of items per page to display
         neighbour is the number of pagination items to be added before and after the current/selected pagination item
         pageChanged is a supplied callback func from PaginationLite to get data to show on current selected page
-    */
+  */
 
   const { itemCount, pageSize, pageNumber = 1, setPageChanged } = props;
   const pageCount = Math.ceil(itemCount / pageSize);

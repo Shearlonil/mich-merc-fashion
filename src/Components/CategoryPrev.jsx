@@ -22,7 +22,7 @@ const CategoryPrev = ({ catTitle }) => {
         catTitle
       );
 
-      setCatItems(response.data);
+      setCatItems(response.data.rows);
     } catch (error) {
       // display error message
       toast.error(handleErrMsg(error).msg);

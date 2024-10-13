@@ -14,6 +14,7 @@ import handleErrMsg from "../Utils/error-handler";
 import { useAuth } from "../app-context/auth-user-context";
 import ConfirmDialogComp from "../Components/ConfirmDialogComp";
 import itemController from "../controllers/item-controller";
+import { ThreeDotLoading } from "../Components/react-loading-indicators/Indicator";
 
 const CreateItems = () => {
   const { handleRefresh, logout } = useAuth();
@@ -304,9 +305,11 @@ const CreateItems = () => {
             variant="outline-primary"
             // type="submit"
             style={{ width: "270px" }}
+            disabled={networkRequest}
             onClick={handleSubmit(onSubmit)}
           >
-            Submit
+            {networkRequest && <ThreeDotLoading color={"#005eeb"} />}
+            {!networkRequest && `Submit`}
           </Button>
         </div>
       </Form>

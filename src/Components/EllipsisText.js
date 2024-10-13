@@ -25,7 +25,7 @@ import { useEffect, useState } from "react";
 // }
 
 const EllipsisText = (props) => {
-  const { message, maxLength = 50, clickable = true } = props;
+  const { message, maxLength = 50, clickable = true, styles } = props;
   // true: showing ellipsis, false: showing full text
   const [ellipsisMode, setEllipsisMode] = useState(true);
 
@@ -33,7 +33,7 @@ const EllipsisText = (props) => {
 
   useEffect(() => {
     display();
-  }, []);
+  }, [message]);
 
   const changeMode = () => {
     if (clickable) {
@@ -66,7 +66,7 @@ const EllipsisText = (props) => {
   };
 
   return (
-    <span onClick={() => changeMode()} {...props}>
+    <span onClick={() => changeMode()} {...styles}>
       {text}
     </span>
   );

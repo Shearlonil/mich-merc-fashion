@@ -24,17 +24,14 @@ const NavBar = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav text-center">
             <Nav className="mx-auto gap-0 gap-md-3">
-              {/* <Nav.Link> */}
               <Link
                 className="navbar-nav nav-item p-2 text-decoration-none nav-link"
                 style={{ fontSize: "1.2em", fontVariant: "all-small-caps" }}
-                eventKey={"1"}
                 to={"/"}
               >
                 HOME
               </Link>
-              {/* </Nav.Link> */}
-              {/* <Nav.Link> */}
+
               <Dropdown className="mx-auto">
                 <Dropdown.Toggle
                   className="text-decoration-none nav-link"
@@ -49,11 +46,9 @@ const NavBar = () => {
                   Categories
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  {/* <Link className="text-decoration-none" to={"/product"}> */}
                   <Dropdown.Item onClick={() => navigate("/shop/glasses")}>
                     Glasses
                   </Dropdown.Item>
-                  {/* </Link> */}
                   <Dropdown.Item onClick={() => navigate("/shop/belts")}>
                     Belts
                   </Dropdown.Item>
@@ -65,11 +60,9 @@ const NavBar = () => {
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
-              {/* </Nav.Link> */}
               <Link
                 className="navbar-nav nav-item p-2 text-decoration-none nav-link"
                 style={{ fontSize: "1.2em", fontVariant: "all-small-caps" }}
-                eventKey={"3"}
                 to={"/shop"}
               >
                 SHOP
@@ -77,7 +70,6 @@ const NavBar = () => {
               <Link
                 className="navbar-nav nav-item p-2 text-decoration-none nav-link"
                 style={{ fontSize: "1.2em", fontVariant: "all-small-caps" }}
-                eventKey={"4"}
                 to={"/contact-us"}
               >
                 CONTACT US
@@ -85,7 +77,6 @@ const NavBar = () => {
               <Link
                 className="navbar-nav nav-item p-2 text-decoration-none nav-link"
                 style={{ fontSize: "1.2em", fontVariant: "all-small-caps" }}
-                eventKey={"5"}
                 to={"/dashboard"}
               >
                 DASHBOARD
