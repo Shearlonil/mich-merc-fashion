@@ -188,14 +188,14 @@ const SHOP_DATA = {
 const categoryMap = ["Shoes", "Belts", "Shirts", "Glasses"];
 
 const categoryOptions = [
-  { value: "shoes", label: "Shoes" },
-  { value: "belts", label: "Belts" },
-  { value: "shirt", label: "Shirt" },
-  { value: "glasses", label: "Glasses" },
+  { value: 1, label: "Shoes" },
+  { value: 2, label: "Belts" },
+  { value: 3, label: "Shirt" },
+  { value: 4, label: "Glasses" },
 ];
 const availabilityOptions = [
-  { value: "in-stock", label: "In-Stock" },
-  { value: "out-of-stock", label: "Out-Of-Stock" },
+  { value: true, label: "In-Stock" },
+  { value: false, label: "Out-Of-Stock" },
 ];
 
 const countryOptions = [

@@ -65,7 +65,11 @@ const EllipsisText = (props) => {
     }
   };
 
-  return <span onClick={() => changeMode()}>{text}</span>;
+  return (
+    <span onClick={() => changeMode()} {...props}>
+      {text}
+    </span>
+  );
 };
 
 export default EllipsisText;

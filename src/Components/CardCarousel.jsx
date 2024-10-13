@@ -51,7 +51,7 @@ const CardCarousell = ({ cards }) => {
         transitionDuration={500}
       >
         {cards === null
-          ? new Array(4).fill(1).map(() => <CardSkeleton />)
+          ? new Array(4).fill(1).map((index) => <CardSkeleton key={index} />)
           : cards.length === 0
           ? noItemFound()
           : cards.map((card, index) => (

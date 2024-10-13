@@ -17,14 +17,19 @@ const ProductCard = ({ productInfo }) => {
     <Wrapper>
       <div>
         <Card
-          style={{ minHeight: "450px" }}
+          style={{ minHeight: "500px", maxHeight: "500px" }}
           className="gap-2 m-2 border-0 rounded-1 bg-light"
         >
           {/* ItemImages is an array of images attached to the item. Select the first */}
           <ImageComponent image={ItemImages[0]} />
           <Card.Header>
-            <h4 className="" style={{ color: "#050580" }}>
-              {title}
+            <h4 className="fw-bold" style={{ color: "#050580" }}>
+              <EllipsisText
+                style={{ fontFamily: "serif" }}
+                message={title}
+                maxLength={30}
+                clickable={false}
+              />
             </h4>
           </Card.Header>
           <Card.Body className="d-flex flex-column justify-content-between">
@@ -39,7 +44,9 @@ const ProductCard = ({ productInfo }) => {
             <div className="d-flex align-items-center justify-content-between">
               <Link
                 to={"/product"}
-                className="btn btn-outline-danger rounded-pill"
+                className={`btn btn-outline-danger rounded-pill ${
+                  price === 0 ? "disabled" : ""
+                }`}
               >
                 View
               </Link>

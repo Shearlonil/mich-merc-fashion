@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { BiLinkAlt } from "react-icons/bi";
 import { toast } from "react-toastify";
 
-import { capitalizeFirstLetter } from "../Utils/helpers";
 import CardCarousell from "./CardCarousel";
 import itemController from "../controllers/item-controller";
 import handleErrMsg from "../Utils/error-handler";
@@ -42,7 +41,7 @@ const CategoryPrev = ({ catTitle }) => {
         </h2>
       </Link>
 
-      <div className="row">
+      <div className="row mb-3">
         {<CardCarousell cards={catItems} key={CardTitle} />}
         <div className="text-center">
           <Link

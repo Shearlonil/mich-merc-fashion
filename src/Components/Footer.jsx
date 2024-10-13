@@ -26,10 +26,10 @@ const Footer = () => {
               elit. Ducimus, error?
             </p>
           </div>
-          <ul class="col-12 col-md-4 list-unstyled d-flex justify-content-center gap-3 align-items-center m-0 my-2">
+          <ul className="col-12 col-md-4 list-unstyled d-flex justify-content-center gap-3 align-items-center m-0 my-2">
             <li>
               <a
-                class="link-body-emphasis"
+                className="link-body-emphasis"
                 target="_blank"
                 href="https://wa.me/"
               >
@@ -38,7 +38,7 @@ const Footer = () => {
             </li>
             <li>
               <a
-                class="link-body-emphasis"
+                className="link-body-emphasis"
                 target="_blank"
                 href="https://www.instagram.com/*"
               >
@@ -47,7 +47,7 @@ const Footer = () => {
             </li>
             <li>
               <a
-                class="link-body-emphasis"
+                className="link-body-emphasis"
                 target="_blank"
                 href="https://www.linkedin.com/in/*"
               >
@@ -56,7 +56,7 @@ const Footer = () => {
             </li>
             <li>
               <a
-                class="link-body-emphasis"
+                className="link-body-emphasis"
                 target="_blank"
                 href="https://www.facebook.com/*"
               >
@@ -66,7 +66,7 @@ const Footer = () => {
 
             <li>
               <a
-                class="link-body-emphasis"
+                className="link-body-emphasis"
                 target="_blank"
                 href="mailto:admin@hello.com"
               >
