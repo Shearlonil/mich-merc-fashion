@@ -44,8 +44,8 @@ const CardCarousell = ({ cards }) => {
     <div className="container">
       <Carousel
         responsive={responsive}
-        infinite={true}
-        autoPlay={true}
+        infinite={!isSingleItem}
+        autoPlay={!isSingleItem}
         autoPlaySpeed={4000}
         customTransition="all 1s"
         transitionDuration={500}
