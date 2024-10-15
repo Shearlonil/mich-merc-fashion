@@ -40,6 +40,8 @@ const noItemFound = () => {
 };
 
 const CardCarousell = ({ cards }) => {
+  let isSingleItem = cards === null || cards.length < 2 ? true : false;
+
   return (
     <div className="container">
       <Carousel
