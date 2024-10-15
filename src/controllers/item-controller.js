@@ -17,8 +17,8 @@ const create = async (data) => {
   return await httpService.post(`/items/create`, formData);
 };
 
-const findById = async (id) => {
-  return await httpService.get(`/applicant/find/${id}`);
+const findById = async (item_id) => {
+  return await httpService.get(`/items/find/${item_id}`);
 };
 
 const fetchRecentItemsByCatID = async (pageSize, cat_id) => {

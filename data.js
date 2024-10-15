@@ -1,7 +1,7 @@
 import IMAGES from "./src/images/images";
 
 const SHOP_DATA = {
-  Shoes: [
+  Footwears: [
     {
       id: 0,
       name: "Brown Brim",
@@ -185,10 +185,10 @@ const SHOP_DATA = {
   ],
 };
 
-const categoryMap = ["Shoes", "Belts", "Shirts", "Glasses"];
+const categoryMap = ["Footwears", "Belts", "Shirts", "Glasses"];
 
 const categoryOptions = [
-  { value: 1, label: "Shoes" },
+  { value: 1, label: "Footwears" },
   { value: 2, label: "Belts" },
   { value: 3, label: "Shirt" },
   { value: 4, label: "Glasses" },

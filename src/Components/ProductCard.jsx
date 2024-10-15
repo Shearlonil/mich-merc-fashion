@@ -11,7 +11,7 @@ const Wrapper = styled.div`
 `;
 
 const ProductCard = ({ productInfo }) => {
-  const { desc, title, ItemImages, price } = productInfo;
+  const { id, desc, title, ItemImages, price } = productInfo;
 
   return (
     <Wrapper>
@@ -44,7 +44,7 @@ const ProductCard = ({ productInfo }) => {
             </Card.Text>
             <div className="d-flex align-items-center justify-content-between">
               <Link
-                to={"/product"}
+                to={`/product/${id}`}
                 className={`btn btn-outline-danger rounded-pill ${
                   price === 0 ? "disabled" : ""
                 }`}

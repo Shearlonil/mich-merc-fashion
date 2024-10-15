@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
-import IMAGES from "../images/images";
 import { BsArrowRight } from "react-icons/bs";
 import styled from "styled-components";
+import { Link, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import Skeleton from "react-loading-skeleton";
+
 import { capitalizeFirstLetter } from "../Utils/helpers";
-import { Link } from "react-router-dom";
+import IMAGES from "../images/images";
+import handleErrMsg from "../Utils/error-handler";
+import itemController from "../controllers/item-controller";
+import ImageComponent from "../Components/ImageComponent";
 
 const ScrollBar = styled.div`
   ::-webkit-scrollbar {
@@ -25,8 +31,79 @@ const ScrollBar = styled.div`
 `;
 
 const Product = () => {
+  const { id } = useParams();
+  const [networkRequest, setNetworkRequest] = useState(false);
+
   const [mainImg, setMainImg] = useState(IMAGES.shoe1);
   const otherImg = [IMAGES.shoe1, IMAGES.shoe2, IMAGES.shoe3, IMAGES.shoe4];
+  const [photos, setPhotos] = useState([]);
+
+  useEffect(() => {
+    initialize();
+  }, []);
+
+  const initialize = async () => {
+    try {
+      setNetworkRequest(true);
+      const response = await itemController.findById(id);
+
+      setNetworkRequest(false);
+    } catch (error) {
+      // display error message
+      toast.error(handleErrMsg(error).msg);
+      setNetworkRequest(false);
+    }
+  };
+
+  const imgPhotos = () => {
+    return (
+      <div
+        className="d-flex gap-2 justify-content-center flex-nowrap"
+        style={{ overflowX: "auto" }}
+      >
+        {otherImg.map((e, index) => (
+          <img
+            className="border btn rounded-3"
+            onClick={() => setMainImg(e)}
+            key={index}
+            src={e}
+            style={{ maxWidth: 70 }}
+            alt={`image ${e}`}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  const imgPhotosSkeleton = () => {
+    return (
+      <div
+        className="d-flex gap-2 justify-content-center flex-nowrap"
+        style={{ overflowX: "auto" }}
+      >
+        {new Array(4).fill(1).map((index) => (
+          <Skeleton count={1} key={Math.random()} />
+          // <p key={Math.random()}>a</p>
+        ))}
+      </div>
+    );
+  };
+
+  const noItemFound = () => {
+    const cardProp = {
+      desc: "",
+      title: "No Item Found",
+      ItemImages: [
+        {
+          file_name: "logo.png",
+          blur_hash: "UZA2ooV?V=RQp3X9o#oyM+n$jbWXVpjbWCa|",
+        },
+      ],
+      price: 0,
+    };
+    return <ProductCard productInfo={cardProp} />;
+  };
+
   return (
     <ScrollBar>
       <div className="bg-danger" style={{ height: "50px" }}></div>
@@ -38,7 +115,7 @@ const Product = () => {
                 Categories
               </p>
               <ul className="list-group">
-                {["glasses", "belts", "footwares", "shirts"].map((item) => (
+                {["glasses", "belts", "footwears", "shirts"].map((item) => (
                   <Link className="text-decoration-none" to={`/shop/${item}`}>
                     <li className="list-group-item list-group-item-action">
                       {capitalizeFirstLetter(item)}
@@ -48,28 +125,16 @@ const Product = () => {
               </ul>
             </div>
           </Col>
+
           <Col className="row" xs="12" md="9">
             <div className="col-12 col-md-5">
+              {/* <ImageComponent image={ItemImages[0]} /> */}
               <img
                 src={mainImg}
                 style={{ maxWidth: "300px", width: "100%", height: "300px" }}
                 alt=""
               />
-              <div
-                className="d-flex gap-2 justify-content-center flex-nowrap"
-                style={{ overflowX: "auto" }}
-              >
-                {otherImg.map((e, index) => (
-                  <img
-                    className="border btn rounded-3"
-                    onClick={() => setMainImg(e)}
-                    key={index}
-                    src={e}
-                    style={{ maxWidth: 70 }}
-                    alt={`image ${e}`}
-                  />
-                ))}
-              </div>
+              {imgPhotosSkeleton()}
             </div>
             <div className="col-12 col-md-7">
               <div className="py-4 mt-3">
@@ -104,13 +169,15 @@ const Product = () => {
                   </button>
                 </div>
                 <small>
-                  Categories: <b>Footware</b>
+                  Categories: <b>Footwears</b>
                 </small>
               </div>
 
               {/* <hr /> */}
             </div>
-            <div className="border py-4 px-3 rounded-3 mt-3">
+
+            {/* RELATED PRODUCTS */}
+            <div className="border py-4 px-3 rounded-3 mt-3 mb-3">
               <h2>
                 <span>Related Products</span>
               </h2>
