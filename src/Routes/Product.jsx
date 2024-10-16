@@ -37,6 +37,7 @@ const Product = () => {
   const [mainImg, setMainImg] = useState(null);
   const [photos, setPhotos] = useState([]);
   const [item, setItem] = useState(null);
+  const [randomItems, setRandomItems] = useState([]);
 
   useEffect(() => {
     initialize();
@@ -58,6 +59,7 @@ const Product = () => {
 
       //check if the request to fetch random items doesn't fail before setting values to display
       if (randomItems && randomItems.data) {
+        setRandomItems(randomItems.data);
       }
 
       setNetworkRequest(false);
@@ -101,27 +103,54 @@ const Product = () => {
     );
   };
 
-  const noItemFound = () => {
-    <div className="">
-      <div
-        className="d-flex flex-column justify-content-between border p-3"
-        style={{ height: "20rem", minWidth: "10rem" }}
-      >
-        <small className="poppins">Not Found</small>
-        <h5 className="text-nowrap fw-normal">No Item</h5>
-        <img
-          src={IMAGES.logo}
-          style={{ maxWidth: "100%", width: "300px", height: 130 }}
-          alt=""
-        />
-        <div className="d-flex justify-content-between">
-          <p className="m-0">£0.00</p>
-          <button className="d-flex align-item-center justify-content-center btn disabled btn-outline-dark py-1 px-2 rounded-circle">
-            <BsArrowRight />
-          </button>
+  const createRandomItems = () => {
+    return randomItems.map((item, index) => (
+      <div className="">
+        <div
+          className="d-flex flex-column justify-content-between border p-3"
+          style={{ height: "20rem", minWidth: "10rem" }}
+        >
+          <small className="poppins">Sneakers</small>
+          <h5 className="text-nowrap fw-normal">{item.title}</h5>
+          <img
+            src={IMAGES.shoe5}
+            style={{ maxWidth: "100%", width: "300px", height: 130 }}
+            alt=""
+          />
+          <div className="d-flex justify-content-between">
+            <p className="m-0">£{item.price}</p>
+            <button className="d-flex align-item-center justify-content-center btn btn-outline-dark py-1 px-2 rounded-circle">
+              <BsArrowRight />
+            </button>
+          </div>
         </div>
       </div>
-    </div>;
+    ));
+  };
+
+  const noItemFound = () => {
+    return (
+      <div className="">
+        <div
+          className="d-flex flex-column justify-content-between border p-3"
+          style={{ height: "20rem", minWidth: "10rem" }}
+        >
+          <small className="poppins">Not Found</small>
+          <h5 className="text-nowrap fw-normal">No Item</h5>
+          <img
+            src={IMAGES.logo}
+            style={{ maxWidth: "100%", width: "300px", height: 130 }}
+            alt=""
+          />
+          <div className="d-flex justify-content-between">
+            <p className="m-0">£0.00</p>
+            <button className="d-flex align-item-center justify-content-center btn disabled btn-outline-dark py-1 px-2 rounded-circle">
+              <BsArrowRight />
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -202,86 +231,7 @@ const Product = () => {
                 <span>Related Products</span>
               </h2>
               <div className="d-flex flex-column flex-md-row gap-2">
-                <div className="">
-                  <div
-                    className="d-flex flex-column justify-content-between border p-3"
-                    style={{ height: "20rem", minWidth: "10rem" }}
-                  >
-                    <small className="poppins">Sneakers</small>
-                    <h5 className="text-nowrap fw-normal">Running shoes</h5>
-                    <img
-                      src={IMAGES.shoe3}
-                      style={{ maxWidth: "100%", width: "300px", height: 130 }}
-                      alt=""
-                    />
-                    <div className="d-flex justify-content-between">
-                      <p className="m-0">$450.00</p>
-                      <button className="d-flex align-item-center justify-content-center btn btn-outline-dark py-1 px-2 rounded-circle">
-                        <BsArrowRight />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div className="">
-                  <div
-                    className="d-flex flex-column justify-content-between border p-3"
-                    style={{ height: "20rem", minWidth: "10rem" }}
-                  >
-                    <small className="poppins">Sneakers</small>
-                    <h5 className="text-nowrap fw-normal">Men shoes</h5>
-                    <img
-                      src={IMAGES.shoe4}
-                      style={{ maxWidth: "100%", width: "300px", height: 130 }}
-                      alt=""
-                    />
-                    <div className="d-flex justify-content-between">
-                      <p className="m-0">$450.00</p>
-                      <button className="d-flex align-item-center justify-content-center btn btn-outline-dark py-1 px-2 rounded-circle">
-                        <BsArrowRight />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div className="">
-                  <div
-                    className="d-flex flex-column justify-content-between border p-3"
-                    style={{ height: "20rem", minWidth: "10rem" }}
-                  >
-                    <small className="poppins">Sneakers</small>
-                    <h5 className="text-nowrap fw-normal">Party Shoes</h5>
-                    <img
-                      src={IMAGES.shoe5}
-                      style={{ maxWidth: "100%", width: "300px", height: 130 }}
-                      alt=""
-                    />
-                    <div className="d-flex justify-content-between">
-                      <p className="m-0">$450.00</p>
-                      <button className="d-flex align-item-center justify-content-center btn btn-outline-dark py-1 px-2 rounded-circle">
-                        <BsArrowRight />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div className="">
-                  <div
-                    className="d-flex flex-column justify-content-between border p-3"
-                    style={{ height: "20rem", minWidth: "10rem" }}
-                  >
-                    <small className="poppins">Sneakers</small>
-                    <h5 className="text-nowrap fw-normal">Cool Shoes</h5>
-                    <img
-                      src={IMAGES.shoe6}
-                      style={{ maxWidth: "100%", width: "300px", height: 130 }}
-                      alt=""
-                    />
-                    <div className="d-flex justify-content-between">
-                      <p className="m-0">$450.00</p>
-                      <button className="d-flex align-item-center justify-content-center btn btn-outline-dark py-1 px-2 rounded-circle">
-                        <BsArrowRight />
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                {item && createRandomItems()}
               </div>
             </div>
           </Col>
