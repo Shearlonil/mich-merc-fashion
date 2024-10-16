@@ -9,7 +9,7 @@ import Skeleton from "react-loading-skeleton";
 import { capitalizeFirstLetter } from "../Utils/helpers";
 import IMAGES from "../images/images";
 import handleErrMsg from "../Utils/error-handler";
-import itemController from "../controllers/item-controller";
+import genericController from "../controllers/generic-controller";
 import ImageComponent from "../Components/ImageComponent";
 
 const ScrollBar = styled.div`
@@ -45,14 +45,21 @@ const Product = () => {
   const initialize = async () => {
     try {
       setNetworkRequest(true);
-      const response = await itemController.findById(id);
-      if (response && response.data) {
-        setItem(response.data);
-        setPhotos(response.data.ItemImages);
-        setMainImg(response.data.ItemImages[0]);
+      const urls = [`/items/find/${id}`, `/items/random/${5}`];
+      const response = await genericController.performGetRequests(urls);
+      const { 0: item, 1: randomItems } = response;
+
+      //check if the request to fetch item doesn't fail before setting values to display
+      if (item && item.data) {
+        setItem(item.data);
+        setPhotos(item.data.ItemImages);
+        setMainImg(item.data.ItemImages[0]);
       }
 
-      await itemController.random(5);
+      //check if the request to fetch random items doesn't fail before setting values to display
+      if (randomItems && randomItems.data) {
+      }
+
       setNetworkRequest(false);
     } catch (error) {
       // display error message
