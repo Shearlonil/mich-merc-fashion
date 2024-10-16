@@ -34,7 +34,7 @@ const Product = () => {
   const { id } = useParams();
   const [networkRequest, setNetworkRequest] = useState(false);
 
-  const [mainImg, setMainImg] = useState(IMAGES.shoe1);
+  const [mainImg, setMainImg] = useState(null);
   const otherImg = [IMAGES.shoe1, IMAGES.shoe2, IMAGES.shoe3, IMAGES.shoe4];
   const [photos, setPhotos] = useState([]);
   const [item, setItem] = useState(null);
@@ -50,6 +50,7 @@ const Product = () => {
       if (response && response.data) {
         setItem(response.data);
         setPhotos(response.data.ItemImages);
+        setMainImg(response.data.ItemImages[0]);
       }
 
       setNetworkRequest(false);
@@ -130,7 +131,7 @@ const Product = () => {
 
           <Col className="row" xs="12" md="9">
             <div className="col-12 col-md-5 p-4 my-2">
-              {item && <ImageComponent image={photos[0]} height={300} />}
+              {item && <ImageComponent image={mainImg} height={300} />}
               {item && imgPhotos()}
               {!item && <Skeleton height={300} />}
               {!item && imgPhotosSkeleton()}
