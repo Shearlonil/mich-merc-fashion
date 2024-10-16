@@ -20,7 +20,7 @@ const StyledBlurhash = styled(Blurhash)`
   left: 0;
 `;
 
-const ImageComponent = ({ image }) => {
+const ImageComponent = ({ image, width, height }) => {
   const [isLoaded, setLoaded] = useState(false);
   const [isLoadStarted, setLoadStarted] = useState(false);
 
@@ -36,16 +36,16 @@ const ImageComponent = ({ image }) => {
       <LazyLoadImage
         key={image?.id}
         src={`${httpService.baseURL()}/items/imgs/${image?.file_name}`}
-        width={"100%"}
-        height={200}
+        width={width || "100%"}
+        height={height || 200}
         onLoad={handleLoad}
         beforeLoad={handleLoadStarted}
       />
       {!isLoaded && isLoadStarted && (
         <StyledBlurhash
           hash={image.blur_hash}
-          width={"100%"}
-          height={200}
+          width={width || "100%"}
+          height={height || 200}
           resolutionX={32}
           resolutionY={32}
           punch={1}

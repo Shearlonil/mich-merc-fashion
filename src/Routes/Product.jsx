@@ -37,6 +37,7 @@ const Product = () => {
   const [mainImg, setMainImg] = useState(IMAGES.shoe1);
   const otherImg = [IMAGES.shoe1, IMAGES.shoe2, IMAGES.shoe3, IMAGES.shoe4];
   const [photos, setPhotos] = useState([]);
+  const [item, setItem] = useState(null);
 
   useEffect(() => {
     initialize();
@@ -46,6 +47,10 @@ const Product = () => {
     try {
       setNetworkRequest(true);
       const response = await itemController.findById(id);
+      if (response && response.data) {
+        setItem(response.data);
+        setPhotos(response.data.ItemImages);
+      }
 
       setNetworkRequest(false);
     } catch (error) {
@@ -58,17 +63,15 @@ const Product = () => {
   const imgPhotos = () => {
     return (
       <div
-        className="d-flex gap-2 justify-content-center flex-nowrap"
+        className="d-flex gap-2 m-2 justify-content-center flex-nowrap"
         style={{ overflowX: "auto" }}
       >
-        {otherImg.map((e, index) => (
-          <img
-            className="border btn rounded-3"
-            onClick={() => setMainImg(e)}
-            key={index}
-            src={e}
-            style={{ maxWidth: 70 }}
-            alt={`image ${e}`}
+        {photos.map((img, index) => (
+          <ImageComponent
+            image={img}
+            key={Math.random()}
+            width={60}
+            height={60}
           />
         ))}
       </div>
@@ -82,8 +85,7 @@ const Product = () => {
         style={{ overflowX: "auto" }}
       >
         {new Array(4).fill(1).map((index) => (
-          <Skeleton count={1} key={Math.random()} />
-          // <p key={Math.random()}>a</p>
+          <Skeleton count={1} key={Math.random()} width={70} height={60} />
         ))}
       </div>
     );
@@ -127,36 +129,34 @@ const Product = () => {
           </Col>
 
           <Col className="row" xs="12" md="9">
-            <div className="col-12 col-md-5">
-              {/* <ImageComponent image={ItemImages[0]} /> */}
-              <img
-                src={mainImg}
-                style={{ maxWidth: "300px", width: "100%", height: "300px" }}
-                alt=""
-              />
-              {imgPhotosSkeleton()}
+            <div className="col-12 col-md-5 p-4 my-2">
+              {item && <ImageComponent image={photos[0]} height={300} />}
+              {item && imgPhotos()}
+              {!item && <Skeleton height={300} />}
+              {!item && imgPhotosSkeleton()}
             </div>
             <div className="col-12 col-md-7">
               <div className="py-4 mt-3">
-                <h2>BLACK LEATHER SHOE FOR MEN</h2>
+                <h2>
+                  {item && item.title}
+                  {!item && <Skeleton />}
+                </h2>
                 <p>
                   Availability:
                   <span className="text-danger fw-bold">Out of Stock</span>
                 </p>
-                {/* <p>Price</p> */}
               </div>
               <hr />
 
               <div>
                 <p>
-                  Lorem, ipsum dolor sit amet consectetur adipisicing elit. Sed
-                  laborum itaque odit iusto error corporis. Nulla velit ex rerum
-                  et facilis tenetur fugiat officiis, perspiciatis illum quaerat
-                  voluptatum voluptatem molestiae eligendi alias quibusdam
-                  delectus blanditiis fugit aliquid ipsa ratione, molestias
-                  dolor voluptatibus.
+                  {item && item.desc}
+                  {!item && <Skeleton />}
                 </p>
-                <h2 className="p-3 poppins">$450</h2>
+                <h2 className="p-3 poppins">
+                  {item && `£${item.price}`}
+                  {!item && <Skeleton />}
+                </h2>
                 <div className="my-2 d-flex gap-3">
                   <input
                     type="number"
@@ -169,11 +169,13 @@ const Product = () => {
                   </button>
                 </div>
                 <small>
-                  Categories: <b>Footwears</b>
+                  Categories: {` `}
+                  <b>
+                    {item && `${item.Category.name}`}
+                    {!item && <Skeleton />}
+                  </b>
                 </small>
               </div>
-
-              {/* <hr /> */}
             </div>
 
             {/* RELATED PRODUCTS */}
