@@ -35,7 +35,6 @@ const Product = () => {
   const [networkRequest, setNetworkRequest] = useState(false);
 
   const [mainImg, setMainImg] = useState(null);
-  const otherImg = [IMAGES.shoe1, IMAGES.shoe2, IMAGES.shoe3, IMAGES.shoe4];
   const [photos, setPhotos] = useState([]);
   const [item, setItem] = useState(null);
 
@@ -53,6 +52,7 @@ const Product = () => {
         setMainImg(response.data.ItemImages[0]);
       }
 
+      await itemController.random(5);
       setNetworkRequest(false);
     } catch (error) {
       // display error message
@@ -68,12 +68,14 @@ const Product = () => {
         style={{ overflowX: "auto" }}
       >
         {photos.map((img, index) => (
-          <ImageComponent
-            image={img}
-            key={Math.random()}
-            width={60}
-            height={60}
-          />
+          <div onClick={() => setMainImg(img)}>
+            <ImageComponent
+              image={img}
+              key={Math.random()}
+              width={60}
+              height={60}
+            />
+          </div>
         ))}
       </div>
     );
@@ -93,18 +95,26 @@ const Product = () => {
   };
 
   const noItemFound = () => {
-    const cardProp = {
-      desc: "",
-      title: "No Item Found",
-      ItemImages: [
-        {
-          file_name: "logo.png",
-          blur_hash: "UZA2ooV?V=RQp3X9o#oyM+n$jbWXVpjbWCa|",
-        },
-      ],
-      price: 0,
-    };
-    return <ProductCard productInfo={cardProp} />;
+    <div className="">
+      <div
+        className="d-flex flex-column justify-content-between border p-3"
+        style={{ height: "20rem", minWidth: "10rem" }}
+      >
+        <small className="poppins">Not Found</small>
+        <h5 className="text-nowrap fw-normal">No Item</h5>
+        <img
+          src={IMAGES.logo}
+          style={{ maxWidth: "100%", width: "300px", height: 130 }}
+          alt=""
+        />
+        <div className="d-flex justify-content-between">
+          <p className="m-0">£0.00</p>
+          <button className="d-flex align-item-center justify-content-center btn disabled btn-outline-dark py-1 px-2 rounded-circle">
+            <BsArrowRight />
+          </button>
+        </div>
+      </div>
+    </div>;
   };
 
   return (

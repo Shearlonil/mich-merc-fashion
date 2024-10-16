@@ -25,11 +25,12 @@ const Category = () => {
 
   useEffect(() => {
     initialize();
-  }, []);
+  }, [category]);
 
   const initialize = async () => {
     try {
       setNetworkRequest(true);
+      setPagedData([]);
       const response = await itemController.fetchRecentItemsByCatName(
         pageSize,
         category

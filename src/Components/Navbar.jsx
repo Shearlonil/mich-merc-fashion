@@ -52,7 +52,7 @@ const NavBar = () => {
                   <Dropdown.Item onClick={() => navigate("/shop/belts")}>
                     Belts
                   </Dropdown.Item>
-                  <Dropdown.Item onClick={() => navigate("/shop/shoes")}>
+                  <Dropdown.Item onClick={() => navigate("/shop/footwears")}>
                     Footwares
                   </Dropdown.Item>
                   <Dropdown.Item onClick={() => navigate("/shop/shirts")}>
