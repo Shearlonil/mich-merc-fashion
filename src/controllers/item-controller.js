@@ -25,6 +25,10 @@ const random = async (limit) => {
   return await httpService.get(`/items/random/${limit}`);
 };
 
+const randomFetchWithCat = async (limit, cat_id) => {
+  return await httpService.post(`/items/random`, { limit, cat_id });
+};
+
 const fetchRecentItemsByCatID = async (pageSize, cat_id) => {
   return await httpService.post(`/items/recent/by-cat-id`, {
     pageSize,
@@ -61,6 +65,7 @@ export default {
   create,
   findById,
   random,
+  randomFetchWithCat,
   fetchRecentItemsByCatID,
   fetchRecentItemsByCatName,
   paginateItemsByCatName,

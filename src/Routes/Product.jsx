@@ -9,7 +9,7 @@ import Skeleton from "react-loading-skeleton";
 import { capitalizeFirstLetter } from "../Utils/helpers";
 import IMAGES from "../images/images";
 import handleErrMsg from "../Utils/error-handler";
-import genericController from "../controllers/generic-controller";
+import itemController from "../controllers/item-controller";
 import ImageComponent from "../Components/ImageComponent";
 
 const ScrollBar = styled.div`
@@ -47,19 +47,22 @@ const Product = () => {
     try {
       setNetworkRequest(true);
       const urls = [`/items/find/${id}`, `/items/random/${5}`];
-      const response = await genericController.performGetRequests(urls);
-      const { 0: item, 1: randomItems } = response;
+      const response = await itemController.findById(id);
 
       //check if the request to fetch item doesn't fail before setting values to display
-      if (item && item.data) {
-        setItem(item.data);
-        setPhotos(item.data.ItemImages);
-        setMainImg(item.data.ItemImages[0]);
-      }
+      if (response && response.data) {
+        setItem(response.data);
+        setPhotos(response.data.ItemImages);
+        setMainImg(response.data.ItemImages[0]);
 
-      //check if the request to fetch random items doesn't fail before setting values to display
-      if (randomItems && randomItems.data) {
-        setRandomItems(randomItems.data);
+        const r = await itemController.randomFetchWithCat(
+          5,
+          response.data.Category.id
+        );
+        //check if the request to fetch random items doesn't fail before setting values to display
+        if (r && r.data) {
+          setRandomItems(r.data);
+        }
       }
 
       setNetworkRequest(false);
@@ -70,6 +73,7 @@ const Product = () => {
     }
   };
 
+  // display associated images for item
   const imgPhotos = () => {
     return (
       <div
@@ -77,7 +81,7 @@ const Product = () => {
         style={{ overflowX: "auto" }}
       >
         {photos.map((img, index) => (
-          <div onClick={() => setMainImg(img)}>
+          <div onClick={() => setMainImg(img)} key={Math.random() * new Date()}>
             <ImageComponent
               image={img}
               key={Math.random()}
@@ -90,6 +94,7 @@ const Product = () => {
     );
   };
 
+  // display skeleton loader for item images
   const imgPhotosSkeleton = () => {
     return (
       <div
@@ -105,13 +110,14 @@ const Product = () => {
 
   const createRandomItems = () => {
     return randomItems.map((item, index) => (
-      <div className="">
+      <div className="" key={Math.random() * new Date() * index}>
         <div
           className="d-flex flex-column justify-content-between border p-3"
           style={{ height: "20rem", minWidth: "10rem" }}
         >
           <small className="poppins">Sneakers</small>
           <h5 className="text-nowrap fw-normal">{item.title}</h5>
+          {/* <ImageComponent image={mainImg} height={130} /> */}
           <img
             src={IMAGES.shoe5}
             style={{ maxWidth: "100%", width: "300px", height: 130 }}
@@ -126,6 +132,32 @@ const Product = () => {
         </div>
       </div>
     ));
+  };
+
+  const displayRandomItemsSkeleton = () => {
+    {
+      return new Array(4).fill(1).map((index) => (
+        <div className="" key={Math.random() * new Date() * index}>
+          <div
+            className="d-flex flex-column justify-content-between border p-3"
+            style={{ height: "20rem", minWidth: "10rem" }}
+          >
+            <small className="poppins">
+              <Skeleton count={1} />
+            </small>
+            <h5 className="text-nowrap fw-normal">
+              <Skeleton count={1} />
+            </h5>
+            <Skeleton count={1} key={Math.random()} height={130} />
+            <div className="d-flex justify-content-between">
+              <p className="m-0">
+                <Skeleton count={1} width={30} />
+              </p>
+            </div>
+          </div>
+        </div>
+      ));
+    }
   };
 
   const noItemFound = () => {
@@ -164,13 +196,19 @@ const Product = () => {
                 Categories
               </p>
               <ul className="list-group">
-                {["glasses", "belts", "footwears", "shirts"].map((item) => (
-                  <Link className="text-decoration-none" to={`/shop/${item}`}>
-                    <li className="list-group-item list-group-item-action">
-                      {capitalizeFirstLetter(item)}
-                    </li>
-                  </Link>
-                ))}
+                {["glasses", "belts", "footwears", "shirts"].map(
+                  (item, index) => (
+                    <Link
+                      className="text-decoration-none"
+                      to={`/shop/${item}`}
+                      key={new Date() * index}
+                    >
+                      <li className="list-group-item list-group-item-action">
+                        {capitalizeFirstLetter(item)}
+                      </li>
+                    </Link>
+                  )
+                )}
               </ul>
             </div>
           </Col>
@@ -231,7 +269,7 @@ const Product = () => {
                 <span>Related Products</span>
               </h2>
               <div className="d-flex flex-column flex-md-row gap-2">
-                {item && createRandomItems()}
+                {item && displayRandomItemsSkeleton()}
               </div>
             </div>
           </Col>
