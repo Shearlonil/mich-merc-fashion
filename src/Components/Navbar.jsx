@@ -1,11 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Dropdown, Nav, Navbar } from "react-bootstrap";
 import IMAGES from "../images/images";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { LuShoppingBag } from "react-icons/lu";
+import { useAuth } from "../app-context/auth-user-context";
+import { useCart } from "../app-context/cart-context";
+import handleErrMsg from "../Utils/error-handler";
 
 const NavBar = () => {
   const navigate = useNavigate();
+
+  const { authUser, logout } = useAuth();
+  const user = authUser();
+  const { count } = useCart();
+
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    // call logout endpoint
+    try {
+      setIsLoggingOut(true);
+      await logout();
+      setIsLoggingOut(false);
+    } catch (error) {
+      // display error message
+      toast.error(handleErrMsg(error).msg);
+      setIsLoggingOut(false);
+    }
+  };
 
   return (
     <div className="sticky-top">
@@ -85,7 +108,8 @@ const NavBar = () => {
             <Link to={"/cart"}>
               <button type="button" className="btn position-relative p-0">
                 <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                  0<span className="visually-hidden">unread messages</span>
+                  {count()}
+                  <span className="visually-hidden">shopping cart items</span>
                 </span>
                 <LuShoppingBag size={30} />
               </button>

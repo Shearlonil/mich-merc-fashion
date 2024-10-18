@@ -23,7 +23,6 @@ const CreateItems = () => {
   const {
     control,
     handleSubmit,
-    register,
     formState: { errors },
     reset,
   } = useForm({
@@ -107,7 +106,6 @@ const CreateItems = () => {
         setPreviewImageUrl((prevItems) => [...prevItems, prev_image_file_path]);
       }
     } else {
-      // setPreviewImageUrl((prevItems) => [...prevItems]);
       event.target.value = "";
       alert("Maximum of 4 images allowed.");
     }
@@ -152,7 +150,6 @@ const CreateItems = () => {
                     size="lg"
                     isInvalid={!!errors.product_name}
                     placeholder="Product Name..."
-                    // isInvalid={!!errors.product_name}
                     {...field}
                   />
                 )}
@@ -173,7 +170,6 @@ const CreateItems = () => {
                     type="number"
                     size="lg"
                     placeholder="£"
-                    // isInvalid={!!errors.firstName}
                     {...field}
                   />
                 )}
@@ -220,7 +216,6 @@ const CreateItems = () => {
                     styles={customStyles}
                     value={availabilityOptions.find((e) => e.value === value)}
                     options={availabilityOptions}
-                    // defaultValue={availabilityOptions[0]}
                     onChange={(val) => onChange(val)}
                   />
                 )}

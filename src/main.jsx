@@ -9,12 +9,15 @@ import "./index.css";
 import App from "./App.jsx";
 import "bootstrap/dist/js/bootstrap.bundle.js";
 import { AuthProvider } from "./app-context/auth-user-context.js";
+import { CartProvider } from "./app-context/cart-context.js";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <App />
+        <CartProvider>
+          <App />
+        </CartProvider>
       </AuthProvider>
     </BrowserRouter>
   </StrictMode>

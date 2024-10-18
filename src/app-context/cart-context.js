@@ -7,18 +7,25 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
 
   // call this function when you want to add to cart
-  const addToCart = async (loginDetails) => {
-    setJwtToken(jwt);
+  const addToCart = (item) => {
+    const old = [...cart, item];
+    setCart(old);
   };
 
   // call this function when you want to remove item from the shopping cart
-  const removeFromCart = async () => {
-    setJwtToken(jwt);
+  const removeFromCart = (item) => {
+    const c = cart.filter((i) => i.id !== item.id);
+    setCart(c);
   };
 
   // call this function when you want to clear the shopping cart
-  const clear = async () => {
+  const clear = () => {
     setCart([]);
+  };
+
+  // call this function when you want to clear the shopping cart
+  const count = () => {
+    return cart.length;
   };
 
   const value = useMemo(
@@ -26,6 +33,7 @@ export const CartProvider = ({ children }) => {
       addToCart,
       removeFromCart,
       clear,
+      count,
     }),
     [cart]
   );
@@ -33,6 +41,6 @@ export const CartProvider = ({ children }) => {
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };
 
-export const useAuth = () => {
+export const useCart = () => {
   return useContext(CartContext);
 };

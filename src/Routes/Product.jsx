@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Col, Row } from "react-bootstrap";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import { BsArrowRight } from "react-icons/bs";
 import styled from "styled-components";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import Skeleton from "react-loading-skeleton";
+import { useForm } from "react-hook-form";
 
 import { capitalizeFirstLetter } from "../Utils/helpers";
 import IMAGES from "../images/images";
@@ -12,6 +15,8 @@ import handleErrMsg from "../Utils/error-handler";
 import itemController from "../controllers/item-controller";
 import ImageComponent from "../Components/ImageComponent";
 import EllipsisText from "../Components/EllipsisText";
+import { useCart } from "../app-context/cart-context";
+import ErrorMessage from "../Components/ErrorMessage";
 
 const ScrollBar = styled.div`
   ::-webkit-scrollbar {
@@ -31,9 +36,15 @@ const ScrollBar = styled.div`
   }
 `;
 
+const schema = yup.object().shape({
+  qty: yup.number().integer().required("Quantity is required"),
+});
+
 const Product = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const { addToCart } = useCart();
 
   const [networkRequest, setNetworkRequest] = useState(false);
 
@@ -41,6 +52,17 @@ const Product = () => {
   const [photos, setPhotos] = useState([]);
   const [item, setItem] = useState(null);
   const [randomItems, setRandomItems] = useState([]);
+  const {
+    reset,
+    handleSubmit,
+    formState: { errors },
+    register,
+  } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      qty: 0,
+    },
+  });
 
   useEffect(() => {
     initialize();
@@ -50,6 +72,7 @@ const Product = () => {
     try {
       setNetworkRequest(true);
       setItem(null);
+      reset();
       const response = await itemController.findById(id);
 
       //check if the request to fetch item doesn't fail before setting values to display
@@ -74,6 +97,13 @@ const Product = () => {
       // display error message
       toast.error(handleErrMsg(error).msg);
       setNetworkRequest(false);
+    }
+  };
+
+  // add item to shopping cart
+  const addToShoppingCart = (data) => {
+    if (data.qty > 0) {
+      addToCart(item);
     }
   };
 
@@ -256,7 +286,7 @@ const Product = () => {
               </div>
               <hr />
 
-              <div>
+              <Form>
                 <p>
                   {item && item.desc}
                   {!item && <Skeleton />}
@@ -265,25 +295,31 @@ const Product = () => {
                   {item && `£${item.price}`}
                   {!item && <Skeleton />}
                 </h2>
-                <div className="my-2 d-flex gap-3">
-                  <input
+                <Form.Group className="my-2 d-flex gap-3">
+                  <Form.Control
+                    required
                     type="number"
-                    placeholder="0"
                     className="form-control rounded-pill shadow-sm"
                     style={{ width: "100px" }}
+                    {...register("qty")}
                   />
-                  <button className="btn btn-danger rounded-pill">
+                  <Button
+                    type="submit"
+                    className="btn btn-danger rounded-pill"
+                    onClick={handleSubmit(addToShoppingCart)}
+                  >
                     Add to Cart
-                  </button>
-                </div>
-                <small>
-                  Categories: {` `}
-                  <b>
-                    {item && `${item.Category.name}`}
-                    {!item && <Skeleton />}
-                  </b>
-                </small>
-              </div>
+                  </Button>
+                </Form.Group>
+                <ErrorMessage source={errors.qty} />
+              </Form>
+              <small>
+                Categories: {` `}
+                <b>
+                  {item && `${item.Category.name}`}
+                  {!item && <Skeleton />}
+                </b>
+              </small>
             </div>
 
             {/* RELATED PRODUCTS */}
