@@ -49,7 +49,7 @@ const Product = () => {
   const initialize = async () => {
     try {
       setNetworkRequest(true);
-      const urls = [`/items/find/${id}`, `/items/random/${5}`];
+      setItem(null);
       const response = await itemController.findById(id);
 
       //check if the request to fetch item doesn't fail before setting values to display
@@ -240,10 +240,19 @@ const Product = () => {
                   {item && item.title}
                   {!item && <Skeleton />}
                 </h2>
-                <p>
-                  Availability:
-                  <span className="text-danger fw-bold">Out of Stock</span>
-                </p>
+                {!item && <Skeleton />}
+                {item && (
+                  <p>
+                    Availability:
+                    <span
+                      className={`ms-2 ${
+                        item.state === true ? "text-primary" : "text-danger"
+                      } fw-bold`}
+                    >
+                      {item.state === true ? "In Stock" : "Out of Stock"}
+                    </span>
+                  </p>
+                )}
               </div>
               <hr />
 
@@ -285,6 +294,7 @@ const Product = () => {
               <div className="d-flex flex-column flex-md-row gap-2">
                 {!networkRequest && createRandomItems()}
                 {networkRequest && displayRandomItemsSkeleton()}
+                {!networkRequest && randomItems.length === 0 && noItemFound()}
               </div>
             </div>
           </Col>

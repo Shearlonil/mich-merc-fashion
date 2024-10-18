@@ -15,7 +15,7 @@ const Category = () => {
   const [networkRequest, setNetworkRequest] = useState(false);
 
   // for pagination
-  const [pageSize] = useState(2);
+  const [pageSize] = useState(12);
   const [currentPage, setCurrentPage] = useState(1);
   const [maxID, setMaxID] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
