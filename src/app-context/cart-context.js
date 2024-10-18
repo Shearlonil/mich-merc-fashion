@@ -8,8 +8,15 @@ export const CartProvider = ({ children }) => {
 
   // call this function when you want to add to cart
   const addToCart = (item) => {
-    const old = [...cart, item];
-    setCart(old);
+    //   find item if already exist in cart then update qty else add new to cart
+    const found = cart.find((i) => i.id == item.id);
+    if (found) {
+      found.qty += item.qty;
+      setCart([...cart]);
+    } else {
+      const old = [...cart, item];
+      setCart(old);
+    }
   };
 
   // call this function when you want to remove item from the shopping cart
@@ -25,7 +32,10 @@ export const CartProvider = ({ children }) => {
 
   // call this function when you want to clear the shopping cart
   const count = () => {
-    return cart.length;
+    return cart.reduce(
+      (accumulator, currentVal) => accumulator + currentVal.qty,
+      0
+    );
   };
 
   const value = useMemo(

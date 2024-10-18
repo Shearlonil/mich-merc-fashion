@@ -103,7 +103,8 @@ const Product = () => {
   // add item to shopping cart
   const addToShoppingCart = (data) => {
     if (data.qty > 0) {
-      addToCart(item);
+      const i = { ...item, qty: data.qty };
+      addToCart(i);
     }
   };
 
