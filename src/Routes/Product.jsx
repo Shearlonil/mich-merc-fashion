@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { BsArrowRight } from "react-icons/bs";
 import styled from "styled-components";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Skeleton from "react-loading-skeleton";
 
@@ -11,6 +11,7 @@ import IMAGES from "../images/images";
 import handleErrMsg from "../Utils/error-handler";
 import itemController from "../controllers/item-controller";
 import ImageComponent from "../Components/ImageComponent";
+import EllipsisText from "../Components/EllipsisText";
 
 const ScrollBar = styled.div`
   ::-webkit-scrollbar {
@@ -32,6 +33,8 @@ const ScrollBar = styled.div`
 
 const Product = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+
   const [networkRequest, setNetworkRequest] = useState(false);
 
   const [mainImg, setMainImg] = useState(null);
@@ -41,7 +44,7 @@ const Product = () => {
 
   useEffect(() => {
     initialize();
-  }, []);
+  }, [id]);
 
   const initialize = async () => {
     try {
@@ -56,8 +59,9 @@ const Product = () => {
         setMainImg(response.data.ItemImages[0]);
 
         const r = await itemController.randomFetchWithCat(
-          5,
-          response.data.Category.id
+          4,
+          response.data.Category.id,
+          id
         );
         //check if the request to fetch random items doesn't fail before setting values to display
         if (r && r.data) {
@@ -109,23 +113,28 @@ const Product = () => {
   };
 
   const createRandomItems = () => {
-    return randomItems.map((item, index) => (
+    return randomItems.map((randomItem, index) => (
       <div className="" key={Math.random() * new Date() * index}>
         <div
           className="d-flex flex-column justify-content-between border p-3"
           style={{ height: "20rem", minWidth: "10rem" }}
         >
-          <small className="poppins">Sneakers</small>
-          <h5 className="text-nowrap fw-normal">{item.title}</h5>
-          {/* <ImageComponent image={mainImg} height={130} /> */}
-          <img
-            src={IMAGES.shoe5}
-            style={{ maxWidth: "100%", width: "300px", height: 130 }}
-            alt=""
-          />
+          <small className="poppins">{item.Category.name}</small>
+          <h5 className="fw-normal">
+            <EllipsisText
+              styles={{ style: { fontFamily: "Abril Fatface" } }}
+              message={randomItem.title}
+              maxLength={10}
+              clickable={false}
+            />
+          </h5>
+          <ImageComponent image={randomItem.img} height={130} />
           <div className="d-flex justify-content-between">
-            <p className="m-0">£{item.price}</p>
-            <button className="d-flex align-item-center justify-content-center btn btn-outline-dark py-1 px-2 rounded-circle">
+            <p className="m-0">£{randomItem.price}</p>
+            <button
+              onClick={() => navigate(`/product/${randomItem.id}`)}
+              className="d-flex align-item-center justify-content-center btn btn-outline-dark py-1 px-2 rounded-circle"
+            >
               <BsArrowRight />
             </button>
           </div>
@@ -148,7 +157,12 @@ const Product = () => {
             <h5 className="text-nowrap fw-normal">
               <Skeleton count={1} />
             </h5>
-            <Skeleton count={1} key={Math.random()} height={130} />
+            <Skeleton
+              count={1}
+              key={Math.random()}
+              height={130}
+              width={"160px"}
+            />
             <div className="d-flex justify-content-between">
               <p className="m-0">
                 <Skeleton count={1} width={30} />
@@ -269,7 +283,8 @@ const Product = () => {
                 <span>Related Products</span>
               </h2>
               <div className="d-flex flex-column flex-md-row gap-2">
-                {item && displayRandomItemsSkeleton()}
+                {!networkRequest && createRandomItems()}
+                {networkRequest && displayRandomItemsSkeleton()}
               </div>
             </div>
           </Col>

@@ -25,8 +25,8 @@ const random = async (limit) => {
   return await httpService.get(`/items/random/${limit}`);
 };
 
-const randomFetchWithCat = async (limit, cat_id) => {
-  return await httpService.post(`/items/random`, { limit, cat_id });
+const randomFetchWithCat = async (limit, cat_id, item_id) => {
+  return await httpService.post(`/items/random`, { limit, cat_id, item_id });
 };
 
 const fetchRecentItemsByCatID = async (pageSize, cat_id) => {
