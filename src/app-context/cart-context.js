@@ -30,6 +30,11 @@ export const CartProvider = ({ children }) => {
     setCart([]);
   };
 
+  // call this function when you want to get items in the shopping cart
+  const getCartItems = () => {
+    return cart;
+  };
+
   // call this function when you want to clear the shopping cart
   const count = () => {
     return cart.reduce(
@@ -43,6 +48,7 @@ export const CartProvider = ({ children }) => {
       addToCart,
       removeFromCart,
       clear,
+      getCartItems,
       count,
     }),
     [cart]

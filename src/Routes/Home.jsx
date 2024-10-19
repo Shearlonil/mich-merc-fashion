@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { BsArrowRight } from "react-icons/bs";
 import Skeleton from "react-loading-skeleton";
 import { toast } from "react-toastify";
+
 import IMAGES from "../images/images";
 import HomeCarousel from "../Components/HomeCarousel";
 import handleErrMsg from "../Utils/error-handler";

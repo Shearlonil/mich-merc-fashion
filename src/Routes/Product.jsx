@@ -17,6 +17,7 @@ import ImageComponent from "../Components/ImageComponent";
 import EllipsisText from "../Components/EllipsisText";
 import { useCart } from "../app-context/cart-context";
 import ErrorMessage from "../Components/ErrorMessage";
+import ConfirmDialogComp from "../Components/ConfirmDialogComp";
 
 const ScrollBar = styled.div`
   ::-webkit-scrollbar {
@@ -48,6 +49,10 @@ const Product = () => {
 
   const [networkRequest, setNetworkRequest] = useState(false);
 
+  const [showModal, setShowModal] = useState(false);
+  const [displayMsg, setDisplayMsg] = useState("");
+  const [qty, setQty] = useState(0);
+
   const [mainImg, setMainImg] = useState(null);
   const [photos, setPhotos] = useState([]);
   const [item, setItem] = useState(null);
@@ -73,6 +78,8 @@ const Product = () => {
       setNetworkRequest(true);
       setItem(null);
       reset();
+      setQty(0);
+
       const response = await itemController.findById(id);
 
       //check if the request to fetch item doesn't fail before setting values to display
@@ -100,12 +107,21 @@ const Product = () => {
     }
   };
 
-  // add item to shopping cart
-  const addToShoppingCart = (data) => {
+  const handleOpenModal = (data) => {
     if (data.qty > 0) {
-      const i = { ...item, qty: data.qty };
-      addToCart(i);
+      const strQty = data.qty > 1 ? "quantities" : "quantity";
+      setDisplayMsg(`Add ${data.qty} ${strQty} of ${item.title} to your cart?`);
+      setQty(data.qty);
+      setShowModal(true);
     }
+  };
+
+  const handleCloseModal = () => setShowModal(false);
+
+  const handleConfirmAction = () => {
+    setShowModal(false);
+    const i = { ...item, qty };
+    addToCart(i);
   };
 
   // display associated images for item
@@ -306,8 +322,10 @@ const Product = () => {
                   />
                   <Button
                     type="submit"
-                    className="btn btn-danger rounded-pill"
-                    onClick={handleSubmit(addToShoppingCart)}
+                    className={`btn btn-danger rounded-pill ${
+                      item === null ? "disabled" : ""
+                    }`}
+                    onClick={handleSubmit(handleOpenModal)}
                   >
                     Add to Cart
                   </Button>
@@ -337,6 +355,12 @@ const Product = () => {
           </Col>
         </Row>
       </div>
+      <ConfirmDialogComp
+        show={showModal}
+        handleClose={handleCloseModal}
+        handleConfirm={handleConfirmAction}
+        message={displayMsg}
+      />
     </ScrollBar>
   );
 };
