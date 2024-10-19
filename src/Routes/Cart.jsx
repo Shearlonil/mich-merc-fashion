@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../app-context/cart-context";
 import ImageComponent from "../Components/ImageComponent";
+import ConfirmDialogComp from "../Components/ConfirmDialogComp";
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -10,6 +11,10 @@ const Cart = () => {
 
   const { getCartItems } = useCart();
   const cart = getCartItems();
+
+  const [showModal, setShowModal] = useState(false);
+  const [displayMsg, setDisplayMsg] = useState("");
+  const [item, setItem] = useState(null);
 
   useEffect(() => {
     setTotal(
@@ -21,18 +26,20 @@ const Cart = () => {
     );
   }, []);
 
+  const handleOpenModal = (data) => {};
+
+  const handleCloseModal = () => setShowModal(false);
+
+  const handleConfirmAction = () => {
+    setShowModal(false);
+  };
+
   return (
     <div className="container">
       <h1>Shopping Cart</h1>
-      <table
-        className="table mx-auto"
-        style={{ width: "800px", maxWidth: "100%" }}
-      >
+      <table className="table mx-auto">
         <thead>
           <tr>
-            <th style={{ padding: "10px 20px" }} scope="col">
-              #
-            </th>
             <th style={{ padding: "10px 20px" }} scope="col"></th>
             <th style={{ padding: "10px 20px" }} scope="col"></th>
             <th style={{ padding: "10px 20px" }} scope="col">
@@ -51,13 +58,6 @@ const Cart = () => {
             cart.map(({ id, title, ItemImages, price, qty }) => {
               return (
                 <tr key={id} className="">
-                  <th style={{ padding: "20px" }} scope="row">
-                    <button
-                      type="button"
-                      className="btn-close"
-                      aria-label="Close"
-                    ></button>
-                  </th>
                   <td style={{ padding: "20px" }}>
                     <ImageComponent
                       image={ItemImages[0]}
@@ -65,10 +65,15 @@ const Cart = () => {
                       height={"100px"}
                     />
                   </td>
-                  <td style={{ padding: "20px" }}>{title}</td>
+                  <td style={{ padding: "20px" }}>
+                    <p className="fw-bold mb-1">{title}</p>
+                    <span className="text-danger">remove</span>
+                  </td>
                   <td style={{ padding: "20px" }}>{qty}</td>
-                  <td style={{ padding: "20px" }}>${price}</td>
-                  <td style={{ padding: "20px" }}>${price * qty}</td>
+                  <td style={{ padding: "20px" }}>£{price}</td>
+                  <td style={{ padding: "20px" }} className="fw-bold">
+                    ${price * qty}
+                  </td>
                 </tr>
               );
             })
@@ -95,6 +100,12 @@ const Cart = () => {
           Proceed to Checkout
         </button>
       </div>
+      <ConfirmDialogComp
+        show={showModal}
+        handleClose={handleCloseModal}
+        handleConfirm={handleConfirmAction}
+        message={displayMsg}
+      />
     </div>
   );
 };
