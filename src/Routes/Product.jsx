@@ -118,10 +118,11 @@ const Product = () => {
 
   const handleCloseModal = () => setShowModal(false);
 
-  const handleConfirmAction = () => {
+  const handleConfirmAction = async () => {
     setShowModal(false);
     const i = { ...item, qty };
-    addToCart(i);
+    delete i.desc;
+    await addToCart(i);
   };
 
   // display associated images for item

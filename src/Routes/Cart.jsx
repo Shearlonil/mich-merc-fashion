@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import numeral from "numeral";
+import { MdAdd } from "react-icons/md";
+import { MdRemove } from "react-icons/md";
+import { toast } from "react-toastify";
+
 import { useCart } from "../app-context/cart-context";
 import ImageComponent from "../Components/ImageComponent";
 import ConfirmDialogComp from "../Components/ConfirmDialogComp";
@@ -10,16 +14,15 @@ const Cart = () => {
 
   const [total, setTotal] = useState(0);
 
-  const { getCartItems } = useCart();
-  const cart = getCartItems();
+  const { getCartItems, updateCart, removeFromCart, clear } = useCart();
 
   const [showModal, setShowModal] = useState(false);
   const [displayMsg, setDisplayMsg] = useState("");
-  const [item, setItem] = useState(null);
+  const [removedCartItem, setRemovedCartItem] = useState(null);
 
   useEffect(() => {
     setTotal(
-      cart.reduce(
+      getCartItems().reduce(
         (accumulator, currentVal) =>
           numeral(currentVal.qty)
             .multiply(currentVal.price)
@@ -28,14 +31,91 @@ const Cart = () => {
         0
       )
     );
-  }, []);
+  }, [getCartItems()]);
 
-  const handleOpenModal = (data) => {};
+  const handleOpenModal = (data) => {
+    if (data) {
+      setDisplayMsg(`Remove item ${data.title} from your cart?`);
+      setRemovedCartItem(data);
+      setShowModal(true);
+    } else {
+      setDisplayMsg(`Clear shopping cart?`);
+      setRemovedCartItem();
+      setShowModal(true);
+    }
+  };
 
   const handleCloseModal = () => setShowModal(false);
 
-  const handleConfirmAction = () => {
+  const handleConfirmAction = async () => {
     setShowModal(false);
+    if (removedCartItem) {
+      try {
+        await removeFromCart(removedCartItem);
+        setTotal(
+          getCartItems().reduce(
+            (accumulator, currentVal) =>
+              numeral(currentVal.qty)
+                .multiply(currentVal.price)
+                .add(accumulator)
+                .value(),
+            0
+          )
+        );
+      } catch (error) {
+        toast.error("Stale Cart");
+        // clear cart
+        clear();
+        setTotal(0);
+      }
+    } else {
+      clear();
+    }
+  };
+
+  const increment = async (data) => {
+    try {
+      data.qty++;
+      await updateCart(data);
+      setTotal(
+        getCartItems().reduce(
+          (accumulator, currentVal) =>
+            numeral(currentVal.qty)
+              .multiply(currentVal.price)
+              .add(accumulator)
+              .value(),
+          0
+        )
+      );
+    } catch (error) {
+      toast.error("Stale Cart");
+      // clear cart
+      clear();
+      setTotal(0);
+    }
+  };
+
+  const decrement = async (data) => {
+    try {
+      if (data.qty > 1) {
+        data.qty--;
+        await updateCart(data);
+        setTotal(
+          getCartItems().reduce(
+            (accumulator, currentVal) =>
+              numeral(currentVal.qty)
+                .multiply(currentVal.price)
+                .add(accumulator)
+                .value(),
+            0
+          )
+        );
+      }
+    } catch (error) {
+      toast.error("Stale Cart");
+      // clear cart
+      clear();
+    }
   };
 
   return (
@@ -45,7 +125,7 @@ const Cart = () => {
       {/* only display in md. Never display in mobile view */}
       <div className="d-none d-md-block mt-4">
         <div className="row mb-2">
-          <div className="col-md-6 col-12"></div>
+          <div className="col-md-6 col-12 fw-bold">Product</div>
           <div className="col-md-2 col-4 fw-bold">Qty</div>
           <div className="col-md-2 col-4 fw-bold">Unit Price</div>
           <div className="col-md-2 col-4 fw-bold">Total Price</div>
@@ -53,11 +133,11 @@ const Cart = () => {
       </div>
       <hr />
 
-      {cart.length > 0 ? (
-        cart.map((item) => {
+      {getCartItems().length > 0 ? (
+        getCartItems().map((item) => {
           const { id, title, ItemImages, price, qty } = item;
           return (
-            <div key={id}>
+            <div key={qty * id}>
               <div className="row mt-4">
                 <div className="col-md-6 col-12">
                   <div className="d-flex">
@@ -70,7 +150,7 @@ const Cart = () => {
                       <p className="fw-bold mb-2">{title}</p>
                       <button
                         className={`btn btn-sm btn-outline-danger px-3 rounded-pill`}
-                        onClick={() => navigate("checkout")}
+                        onClick={() => handleOpenModal(item)}
                       >
                         remove
                       </button>
@@ -85,7 +165,21 @@ const Cart = () => {
                   <div className="col-md-2 col-4">Total Price</div>
                 </div>
 
-                <div className="col-md-2 col-4">{qty}</div>
+                <div className="col-md-2 col-4">
+                  <span
+                    onClick={() => increment(item)}
+                    className="btn btn-outline-dark py-1 px-2 rounded-circle"
+                  >
+                    <MdAdd />
+                  </span>
+                  <span className="ms-2 me-2">{qty}</span>
+                  <button
+                    onClick={() => decrement(item)}
+                    className="btn btn-outline-danger py-1 px-2 rounded-circle"
+                  >
+                    <MdRemove />
+                  </button>
+                </div>
                 <div className="col-md-2 col-4">£{price}</div>
                 <div className="col-md-2 col-4 fw-bold">
                   {numeral(qty).multiply(price).format("£0,0.00")}
@@ -100,57 +194,6 @@ const Cart = () => {
           <h3 className="col text-muted">No item in cart</h3>
         </div>
       )}
-      {/* 
-      <table className="table mx-auto">
-        <thead>
-          <tr>
-            <th style={{ padding: "10px 20px" }} scope="col"></th>
-            <th style={{ padding: "10px 20px" }} scope="col"></th>
-            <th style={{ padding: "10px 20px" }} scope="col">
-              Qty
-            </th>
-            <th style={{ padding: "10px 20px" }} scope="col">
-              Unit Price
-            </th>
-            <th style={{ padding: "10px 20px" }} scope="col">
-              Total Price
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {cart.length > 0 ? (
-            cart.map(({ id, title, ItemImages, price, qty }) => {
-              return (
-                <tr key={id} className="">
-                  <td style={{ padding: "20px" }}>
-                    <ImageComponent
-                      image={ItemImages[0]}
-                      width={"100px"}
-                      height={"100px"}
-                    />
-                  </td>
-                  <td style={{ padding: "20px" }}>
-                    <p className="fw-bold mb-1">{title}</p>
-                    <span className="text-danger">remove</span>
-                  </td>
-                  <td style={{ padding: "20px" }}>{qty}</td>
-                  <td style={{ padding: "20px" }}>£{price}</td>
-                  <td style={{ padding: "20px" }} className="fw-bold">
-                    ${price * qty}
-                  </td>
-                </tr>
-              );
-            })
-          ) : (
-            <tr>
-              <th colSpan={6}>
-                <h3 className="text-muted">No item in cart</h3>
-              </th>
-            </tr>
-          )}
-        </tbody>
-      </table>
-       */}
       <div className="my-3 text-end p-2">
         <div className="text-end">
           <p className="m-0 fs-2">Total</p>
@@ -158,17 +201,17 @@ const Cart = () => {
         </div>
         <div className="d-flex gap-4 justify-content-end">
           <button
-            className={`btn btn-sm btn-outline-dark px-3 rounded-pill ${
-              cart.length > 0 ? "" : "disabled"
+            className={`btn btn-sm btn-outline-danger px-3 rounded-pill ${
+              getCartItems().length > 0 ? "" : "disabled"
             }`}
-            onClick={() => navigate("checkout")}
+            onClick={() => handleOpenModal()}
           >
-            Update Cart
+            Clear Cart
           </button>
 
           <button
-            className={`btn btn-lg btn-outline-danger px-3 rounded-pill ${
-              cart.length > 0 ? "" : "disabled"
+            className={`btn btn-lg btn-outline-dark px-3 rounded-pill ${
+              getCartItems().length > 0 ? "" : "disabled"
             }`}
             onClick={() => navigate("checkout")}
           >
