@@ -36,7 +36,68 @@ const Cart = () => {
 
   return (
     <div className="container">
-      <h1>Shopping Cart</h1>
+      <h1 className="mt-4">Shopping Cart</h1>
+
+      {/* only display in md. Never display in mobile view */}
+      <div className="d-none d-md-block">
+        <div className="row mb-2">
+          <div className="col-md-6 col-12"></div>
+          <div className="col-md-2 col-4 fw-bold">Qty</div>
+          <div className="col-md-2 col-4 fw-bold">Unit Price</div>
+          <div className="col-md-2 col-4 fw-bold">Total Price</div>
+        </div>
+      </div>
+      <hr />
+
+      {cart.length > 0 ? (
+        cart.map((item) => {
+          const { id, title, ItemImages, price, qty } = item;
+          return (
+            <div key={id}>
+              <div className="row mt-4">
+                <div className="col-md-6 col-12">
+                  <div className="d-flex">
+                    <ImageComponent
+                      image={ItemImages[0]}
+                      width={"100px"}
+                      height={"100px"}
+                    />
+                    <div className="ms-3">
+                      <p className="fw-bold mb-1">{title}</p>
+                      <button
+                        className={`btn btn-sm btn-outline-danger px-3 rounded-pill`}
+                        onClick={() => navigate("checkout")}
+                      >
+                        remove
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* ONLY DISPLAY ON MOBILE VIEW. FROM md upward never show */}
+                <div className="row d-md-none mb-2 mt-2">
+                  <div className="col-md-2 col-4">Qty</div>
+                  <div className="col-md-2 col-4">Unit Price</div>
+                  <div className="col-md-2 col-4">Total Price</div>
+                </div>
+
+                <div className="col-md-2 col-4">{qty}</div>
+                <div className="col-md-2 col-4">£{price}</div>
+                {/* <div className="col-md-2 col-4 fw-bold">£{price * qty}</div> */}
+                <div className="col-md-2 col-4 fw-bold">
+                  {numeral(price).multiply(4)}
+                </div>
+              </div>
+              <hr />
+            </div>
+          );
+        })
+      ) : (
+        <div className="row">
+          <h3 className="col text-muted">No item in cart</h3>
+        </div>
+      )}
+      {/* 
       <table className="table mx-auto">
         <thead>
           <tr>
@@ -86,8 +147,9 @@ const Cart = () => {
           )}
         </tbody>
       </table>
-      <div className="my-3 text-center P-3">
-        <div className="text-center">
+       */}
+      <div className="my-3 text-end p-2">
+        <div className="text-end">
           <p className="m-0 fs-2">Total</p>
           <span className="fs-4">£{total}</span>
         </div>
