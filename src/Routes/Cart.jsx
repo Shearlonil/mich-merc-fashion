@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import numeral from "numeral";
 import { useCart } from "../app-context/cart-context";
 import ImageComponent from "../Components/ImageComponent";
 import ConfirmDialogComp from "../Components/ConfirmDialogComp";
@@ -20,7 +21,10 @@ const Cart = () => {
     setTotal(
       cart.reduce(
         (accumulator, currentVal) =>
-          accumulator + currentVal.qty * currentVal.price,
+          numeral(currentVal.qty)
+            .multiply(currentVal.price)
+            .add(accumulator)
+            .value(),
         0
       )
     );
@@ -39,7 +43,7 @@ const Cart = () => {
       <h1 className="mt-4">Shopping Cart</h1>
 
       {/* only display in md. Never display in mobile view */}
-      <div className="d-none d-md-block">
+      <div className="d-none d-md-block mt-4">
         <div className="row mb-2">
           <div className="col-md-6 col-12"></div>
           <div className="col-md-2 col-4 fw-bold">Qty</div>
@@ -63,7 +67,7 @@ const Cart = () => {
                       height={"100px"}
                     />
                     <div className="ms-3">
-                      <p className="fw-bold mb-1">{title}</p>
+                      <p className="fw-bold mb-2">{title}</p>
                       <button
                         className={`btn btn-sm btn-outline-danger px-3 rounded-pill`}
                         onClick={() => navigate("checkout")}
@@ -83,9 +87,8 @@ const Cart = () => {
 
                 <div className="col-md-2 col-4">{qty}</div>
                 <div className="col-md-2 col-4">£{price}</div>
-                {/* <div className="col-md-2 col-4 fw-bold">£{price * qty}</div> */}
                 <div className="col-md-2 col-4 fw-bold">
-                  {numeral(price).multiply(4)}
+                  {numeral(qty).multiply(price).format("£0,0.00")}
                 </div>
               </div>
               <hr />
@@ -151,16 +154,27 @@ const Cart = () => {
       <div className="my-3 text-end p-2">
         <div className="text-end">
           <p className="m-0 fs-2">Total</p>
-          <span className="fs-4">£{total}</span>
+          <span className="fs-4">{numeral(total).format("£0,0.00")}</span>
         </div>
-        <button
-          className={`btn btn-lg btn-outline-danger px-3 rounded-pill ${
-            cart.length > 0 ? "" : "disabled"
-          }`}
-          onClick={() => navigate("checkout")}
-        >
-          Proceed to Checkout
-        </button>
+        <div className="d-flex gap-4 justify-content-end">
+          <button
+            className={`btn btn-sm btn-outline-dark px-3 rounded-pill ${
+              cart.length > 0 ? "" : "disabled"
+            }`}
+            onClick={() => navigate("checkout")}
+          >
+            Update Cart
+          </button>
+
+          <button
+            className={`btn btn-lg btn-outline-danger px-3 rounded-pill ${
+              cart.length > 0 ? "" : "disabled"
+            }`}
+            onClick={() => navigate("checkout")}
+          >
+            Checkout
+          </button>
+        </div>
       </div>
       <ConfirmDialogComp
         show={showModal}
