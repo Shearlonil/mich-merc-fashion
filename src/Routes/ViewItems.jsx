@@ -22,7 +22,7 @@ const ViewItems = () => {
   );
 
   // for pagination
-  const [pageSize] = useState(2);
+  const [pageSize] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [idOffset, setIdOffset] = useState(0);
   const [totalItemsCount, setTotalItemsCount] = useState(0);
@@ -168,7 +168,9 @@ const ViewItems = () => {
       if (response && response.data) {
         setProducts(response.data.products);
         setTotalItemsCount(response.data.count);
-        setIdOffset(response.data[response.data.length - 1].id);
+        setIdOffset(
+          response.data.products[response.data.products.length - 1].id
+        );
       }
       setNetworkRequest(false);
     } catch (error) {
