@@ -61,6 +61,10 @@ const productSearch = async (data) => {
   return await httpService.post(`/items/search`, data);
 };
 
+const paginateProductSearch = async (data, pageNumber) => {
+  return await httpService.post(`/items/search/${pageNumber}`, data);
+};
+
 export default {
   create,
   findById,
@@ -70,4 +74,5 @@ export default {
   fetchRecentItemsByCatName,
   paginateItemsByCatName,
   productSearch,
+  paginateProductSearch,
 };
