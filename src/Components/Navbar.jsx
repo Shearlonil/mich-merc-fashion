@@ -11,11 +11,21 @@ import handleErrMsg from "../Utils/error-handler";
 const NavBar = () => {
   const navigate = useNavigate();
 
+  const [expanded, setExpanded] = useState(false);
+
   const { authUser, logout } = useAuth();
   const user = authUser();
   const { count } = useCart();
 
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleToggle = () => {
+    setExpanded(!expanded);
+  };
+
+  const handleNavSelect = () => {
+    setExpanded(false); // Close the navbar on selection (for mobile)
+  };
 
   const handleLogout = async () => {
     // call logout endpoint
@@ -34,6 +44,8 @@ const NavBar = () => {
     <div className="sticky-top">
       <Navbar
         collapseOnSelect
+        expanded={expanded}
+        onToggle={handleToggle}
         expand="md"
         className="navbar-light bg-light m-0 text-center"
         style={{ fontFamily: "'Montserrat', sans-serif" }}
@@ -51,6 +63,7 @@ const NavBar = () => {
                 className="navbar-nav nav-item p-2 text-decoration-none nav-link"
                 style={{ fontSize: "1.2em", fontVariant: "all-small-caps" }}
                 to={"/"}
+                onClick={handleNavSelect}
               >
                 HOME
               </Link>
@@ -69,16 +82,36 @@ const NavBar = () => {
                   Categories
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  <Dropdown.Item onClick={() => navigate("/shop/glasses")}>
+                  <Dropdown.Item
+                    onClick={() => {
+                      navigate("/shop/glasses");
+                      onClick = { handleNavSelect };
+                    }}
+                  >
                     Glasses
                   </Dropdown.Item>
-                  <Dropdown.Item onClick={() => navigate("/shop/belts")}>
+                  <Dropdown.Item
+                    onClick={() => {
+                      navigate("/shop/belts");
+                      onClick = { handleNavSelect };
+                    }}
+                  >
                     Belts
                   </Dropdown.Item>
-                  <Dropdown.Item onClick={() => navigate("/shop/footwears")}>
+                  <Dropdown.Item
+                    onClick={() => {
+                      navigate("/shop/footwears");
+                      onClick = { handleNavSelect };
+                    }}
+                  >
                     Footwares
                   </Dropdown.Item>
-                  <Dropdown.Item onClick={() => navigate("/shop/shirts")}>
+                  <Dropdown.Item
+                    onClick={() => {
+                      navigate("/shop/shirts");
+                      onClick = { handleNavSelect };
+                    }}
+                  >
                     Shirts
                   </Dropdown.Item>
                 </Dropdown.Menu>
@@ -87,6 +120,7 @@ const NavBar = () => {
                 className="navbar-nav nav-item p-2 text-decoration-none nav-link"
                 style={{ fontSize: "1.2em", fontVariant: "all-small-caps" }}
                 to={"/shop"}
+                onClick={handleNavSelect}
               >
                 SHOP
               </Link>
@@ -94,6 +128,7 @@ const NavBar = () => {
                 className="navbar-nav nav-item p-2 text-decoration-none nav-link"
                 style={{ fontSize: "1.2em", fontVariant: "all-small-caps" }}
                 to={"/contact-us"}
+                onClick={handleNavSelect}
               >
                 CONTACT US
               </Link>
@@ -101,11 +136,12 @@ const NavBar = () => {
                 className="navbar-nav nav-item p-2 text-decoration-none nav-link"
                 style={{ fontSize: "1.2em", fontVariant: "all-small-caps" }}
                 to={"/dashboard"}
+                onClick={handleNavSelect}
               >
                 DASHBOARD
               </Link>
             </Nav>
-            <Link to={"/cart"}>
+            <Link to={"/cart"} onClick={handleNavSelect}>
               <button type="button" className="btn position-relative p-0">
                 <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                   {count()}
