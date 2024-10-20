@@ -57,8 +57,8 @@ const paginateItemsByCatName = async (
   });
 };
 
-const fetchRecentItems = async (id) => {
-  return await httpService.download(`/applicant/cv/${id}`);
+const productSearch = async (data) => {
+  return await httpService.post(`/items/search`, data);
 };
 
 export default {
@@ -69,5 +69,5 @@ export default {
   fetchRecentItemsByCatID,
   fetchRecentItemsByCatName,
   paginateItemsByCatName,
-  fetchRecentItems,
+  productSearch,
 };

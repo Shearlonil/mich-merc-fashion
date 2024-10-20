@@ -133,8 +133,9 @@ const CreateItems = () => {
       color: "rgba(0, 123, 255, 0.75)", // customize color of the dropdown arrow
     }),
   };
+
   return (
-    <div className="container">
+    <div className="container mt-auto mb-auto">
       <Form className="my-2 border rounded p-4 bg-light">
         <Row>
           <Col className="my-2" md={"6"} xs={"12"}>
