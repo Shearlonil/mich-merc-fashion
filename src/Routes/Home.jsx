@@ -148,7 +148,7 @@ const Home = () => {
               >
                 <div>
                   <span>Top Pick</span>
-                  <h1 className="display-5 ">Footwares</h1>
+                  <h1 className="display-5 ">Footwears</h1>
                   <small>
                     <Link
                       to={"/shop/footwears"}
