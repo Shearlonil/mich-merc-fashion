@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Col, Row } from "react-bootstrap";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import { BsArrowRight } from "react-icons/bs";
 import styled from "styled-components";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import Skeleton from "react-loading-skeleton";
+import { useForm } from "react-hook-form";
 
 import { capitalizeFirstLetter } from "../Utils/helpers";
 import IMAGES from "../images/images";
@@ -12,6 +15,9 @@ import handleErrMsg from "../Utils/error-handler";
 import itemController from "../controllers/item-controller";
 import ImageComponent from "../Components/ImageComponent";
 import EllipsisText from "../Components/EllipsisText";
+import { useCart } from "../app-context/cart-context";
+import ErrorMessage from "../Components/ErrorMessage";
+import ConfirmDialogComp from "../Components/ConfirmDialogComp";
 
 const ScrollBar = styled.div`
   ::-webkit-scrollbar {
@@ -31,16 +37,37 @@ const ScrollBar = styled.div`
   }
 `;
 
+const schema = yup.object().shape({
+  qty: yup.number().integer().required("Quantity is required"),
+});
+
 const Product = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const { addToCart } = useCart();
+
   const [networkRequest, setNetworkRequest] = useState(false);
+
+  const [showModal, setShowModal] = useState(false);
+  const [displayMsg, setDisplayMsg] = useState("");
+  const [qty, setQty] = useState(0);
 
   const [mainImg, setMainImg] = useState(null);
   const [photos, setPhotos] = useState([]);
   const [item, setItem] = useState(null);
   const [randomItems, setRandomItems] = useState([]);
+  const {
+    reset,
+    handleSubmit,
+    formState: { errors },
+    register,
+  } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      qty: 0,
+    },
+  });
 
   useEffect(() => {
     initialize();
@@ -50,6 +77,9 @@ const Product = () => {
     try {
       setNetworkRequest(true);
       setItem(null);
+      reset();
+      setQty(0);
+
       const response = await itemController.findById(id);
 
       //check if the request to fetch item doesn't fail before setting values to display
@@ -75,6 +105,24 @@ const Product = () => {
       toast.error(handleErrMsg(error).msg);
       setNetworkRequest(false);
     }
+  };
+
+  const handleOpenModal = (data) => {
+    if (data.qty > 0) {
+      const strQty = data.qty > 1 ? "quantities" : "quantity";
+      setDisplayMsg(`Add ${data.qty} ${strQty} of ${item.title} to your cart?`);
+      setQty(data.qty);
+      setShowModal(true);
+    }
+  };
+
+  const handleCloseModal = () => setShowModal(false);
+
+  const handleConfirmAction = async () => {
+    setShowModal(false);
+    const i = { ...item, qty };
+    delete i.desc;
+    await addToCart(i);
   };
 
   // display associated images for item
@@ -256,7 +304,7 @@ const Product = () => {
               </div>
               <hr />
 
-              <div>
+              <Form>
                 <p>
                   {item && item.desc}
                   {!item && <Skeleton />}
@@ -265,25 +313,33 @@ const Product = () => {
                   {item && `£${item.price}`}
                   {!item && <Skeleton />}
                 </h2>
-                <div className="my-2 d-flex gap-3">
-                  <input
+                <Form.Group className="my-2 d-flex gap-3">
+                  <Form.Control
+                    required
                     type="number"
-                    placeholder="0"
                     className="form-control rounded-pill shadow-sm"
                     style={{ width: "100px" }}
+                    {...register("qty")}
                   />
-                  <button className="btn btn-danger rounded-pill">
+                  <Button
+                    type="submit"
+                    className={`btn btn-danger rounded-pill ${
+                      item === null ? "disabled" : ""
+                    }`}
+                    onClick={handleSubmit(handleOpenModal)}
+                  >
                     Add to Cart
-                  </button>
-                </div>
-                <small>
-                  Categories: {` `}
-                  <b>
-                    {item && `${item.Category.name}`}
-                    {!item && <Skeleton />}
-                  </b>
-                </small>
-              </div>
+                  </Button>
+                </Form.Group>
+                <ErrorMessage source={errors.qty} />
+              </Form>
+              <small>
+                Categories: {` `}
+                <b>
+                  {item && `${item.Category.name}`}
+                  {!item && <Skeleton />}
+                </b>
+              </small>
             </div>
 
             {/* RELATED PRODUCTS */}
@@ -300,6 +356,12 @@ const Product = () => {
           </Col>
         </Row>
       </div>
+      <ConfirmDialogComp
+        show={showModal}
+        handleClose={handleCloseModal}
+        handleConfirm={handleConfirmAction}
+        message={displayMsg}
+      />
     </ScrollBar>
   );
 };

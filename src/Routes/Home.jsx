@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { BsArrowRight } from "react-icons/bs";
 import Skeleton from "react-loading-skeleton";
 import { toast } from "react-toastify";
+
 import IMAGES from "../images/images";
 import HomeCarousel from "../Components/HomeCarousel";
 import handleErrMsg from "../Utils/error-handler";
@@ -147,7 +148,7 @@ const Home = () => {
               >
                 <div>
                   <span>Top Pick</span>
-                  <h1 className="display-5 ">Footwares</h1>
+                  <h1 className="display-5 ">Footwears</h1>
                   <small>
                     <Link
                       to={"/shop/footwears"}
