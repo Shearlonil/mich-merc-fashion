@@ -238,7 +238,7 @@ const ViewItems = () => {
       const { id, title, ItemImages, state, createdAt, Category } = item;
       return (
         <div key={id}>
-          <div className="row mt-4">
+          <div className="row mt-5">
             <div className="col-md-6 col-12">
               <div className="d-flex">
                 <ImageComponent
