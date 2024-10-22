@@ -87,7 +87,15 @@ const ChangePw = () => {
     <div className="my-4">
       <div className="container py-md-5 py-3">
         <div className="text-center">
-          <h2 className="fw-bold">Change Password</h2>
+          <h2 className="fw-bold">
+            Change{" "}
+            <span
+              className="text-primary"
+              style={{ fontFamily: "Abril Fatface" }}
+            >
+              Password
+            </span>
+          </h2>
         </div>
         <Form className="d-flex justify-content-center">
           <div className="bg-light p-4 rounded-4 border border-2">

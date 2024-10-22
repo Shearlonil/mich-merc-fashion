@@ -63,6 +63,7 @@ const CreateItems = () => {
 
       setPreviewImageUrl([]);
       reset();
+      toast.info("Item successfully created");
     } catch (error) {
       // Incase of 408 Timeout error (Token Expiration), perform refresh
       try {

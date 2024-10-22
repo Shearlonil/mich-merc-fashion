@@ -43,7 +43,7 @@ function App() {
           <Route path="/dashboard" element={<ProtectedRoute />}>
             <Route path="/dashboard/view-items" element={<ViewItems />} />
             <Route
-              path="/dashboard/view-items/details"
+              path="/dashboard/view-items/details/:id"
               element={<ViewItemsDetails />}
             />
             <Route path="/dashboard/create-items" element={<CreateItems />} />

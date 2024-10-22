@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 import { Controller, useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 // yup
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -9,6 +11,9 @@ import ErrorMessage from "../Components/ErrorMessage";
 import { PrevImg } from "../Components/Styles/CreateItemStyle";
 import IMAGES from "../images/images";
 import { BiTrashAlt } from "react-icons/bi";
+import itemController from "../controllers/item-controller";
+import handleErrMsg from "../Utils/error-handler";
+import { useAuth } from "../app-context/auth-user-context";
 
 const schema = yup.object().shape({
   product_name: yup.string().required("First name is required!"),
@@ -19,6 +24,12 @@ const schema = yup.object().shape({
 });
 
 const ViewItemsDetails = () => {
+  const { id } = useParams();
+
+  const { handleRefresh, logout } = useAuth();
+
+  const [networkRequest, setNetworkRequest] = useState(false);
+
   const [show, setShow] = useState(false);
   const [selectedImageIndex, setSelectedImage] = useState(null);
   const [newImage, setNewImage] = useState([]);
@@ -48,8 +59,41 @@ const ViewItemsDetails = () => {
   };
 
   useEffect(() => {
-    console.log(newImage);
+    initialize();
   }, [newImage]);
+
+  const initialize = async () => {
+    try {
+      setNetworkRequest(true);
+
+      const response = await itemController.findById(id);
+
+      //check if the request to fetch item doesn't fail before setting values to display
+      if (response && response.data) {
+        setValue("product_name", response.data.title);
+        setValue("description", response.data.desc);
+        setValue("price", response.data.price);
+        // setValue("email", profile.data.email);
+        // setValue("sex", gender);
+      }
+
+      setNetworkRequest(false);
+    } catch (error) {
+      // Incase of 408 Timeout error (Token Expiration), perform refresh
+      try {
+        if (error.response?.status === 408) {
+          await handleRefresh();
+          return initialize();
+        }
+        // display error message
+        toast.error(handleErrMsg(error).msg);
+      } catch (error) {
+        // if error while refreshing, logout and delete all cookies
+        logout();
+      }
+      setNetworkRequest(false);
+    }
+  };
 
   // create a preview
   const handleAddNewImage = (event) => {
@@ -80,6 +124,7 @@ const ViewItemsDetails = () => {
     register,
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -101,8 +146,15 @@ const ViewItemsDetails = () => {
   return (
     <>
       <div className="container my-4">
-        <h2 className="display-6">
-          <span>Edit Product Details</span>
+        <h2 className="display-6 mb-3">
+          Edit{" "}
+          <span
+            className="text-primary"
+            style={{ fontFamily: "Abril Fatface" }}
+          >
+            Product{" "}
+          </span>
+          Details
         </h2>
         <Form className="bg-light p-4 rounded-4 border border-2">
           {/* <h4>Edit Info</h4> */}
@@ -129,7 +181,7 @@ const ViewItemsDetails = () => {
               sm="6"
               controlId="price"
             >
-              <Form.Label>Price</Form.Label>
+              <Form.Label>Price (£)</Form.Label>
               <Form.Control
                 required
                 type="text"
@@ -214,8 +266,14 @@ const ViewItemsDetails = () => {
         <hr className="my-4" />
 
         <Form className="bg-light p-4 rounded-4 border border-2">
-          <h2>
-            <span>Update Images</span>
+          <h2 className="mb-4">
+            Update{" "}
+            <span
+              className="text-primary"
+              style={{ fontFamily: "Abril Fatface" }}
+            >
+              Images
+            </span>
           </h2>
           <div className="row m-2 gap-3">
             {previewImageUrl.map((img, index) => {

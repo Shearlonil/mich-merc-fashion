@@ -6,7 +6,7 @@ const create = async (data) => {
   formData.append("status", data.available.value);
   formData.append("price", data.price);
   formData.append("desc", data.description);
-  formData.append("category_id", data.category.value);
+  formData.append("category", data.category.value);
 
   // attach array of files
   for (var i = 0; i < data.image_upload.length; i++) {

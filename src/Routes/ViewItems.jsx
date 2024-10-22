@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Col, FloatingLabel, Form, Row, Table } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Select from "react-select";
 import Skeleton from "react-loading-skeleton";
@@ -14,6 +14,8 @@ import ImageComponent from "../Components/ImageComponent";
 import PaginationLite from "../Components/PaginationLite";
 
 const ViewItems = () => {
+  const navigate = useNavigate();
+
   const [networkRequest, setNetworkRequest] = useState(false);
   const [products, setProducts] = useState([]);
   const [selectedCat, setSelectedCat] = useState(catOptions[0]);
@@ -250,7 +252,7 @@ const ViewItems = () => {
                   <p className="fw-bold mb-2">{title}</p>
                   <button
                     className={`btn btn-sm btn-outline-danger px-3 rounded-pill`}
-                    onClick={() => console.log(item)}
+                    onClick={() => navigate(`details/${id}`)}
                   >
                     view
                   </button>
