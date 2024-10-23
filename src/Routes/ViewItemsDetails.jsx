@@ -3,6 +3,7 @@ import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 import { Controller, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import Select from "react-select";
 // yup
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -14,13 +15,27 @@ import { BiTrashAlt } from "react-icons/bi";
 import itemController from "../controllers/item-controller";
 import handleErrMsg from "../Utils/error-handler";
 import { useAuth } from "../app-context/auth-user-context";
+import { availabilityOptions, categoryOptions } from "../../data";
+import ImageComponent from "../Components/ImageComponent";
 
 const schema = yup.object().shape({
   product_name: yup.string().required("First name is required!"),
   price: yup.string().required("Price is required!"),
-  available: yup.string().required("Availality  is required"),
+  available: yup
+    .object()
+    .shape({
+      label: yup.string().required("Invalid value"),
+      value: yup.string().required("Invalid value"),
+    })
+    .required("Status  is required"),
   description: yup.string().required("Description"),
-  category: yup.string().max(1).required("Category is required!"),
+  category: yup
+    .object()
+    .shape({
+      label: yup.string().required("Invalid value"),
+      value: yup.string().required("Invalid value"),
+    })
+    .required("Category is required!"),
 });
 
 const ViewItemsDetails = () => {
@@ -33,12 +48,7 @@ const ViewItemsDetails = () => {
   const [show, setShow] = useState(false);
   const [selectedImageIndex, setSelectedImage] = useState(null);
   const [newImage, setNewImage] = useState([]);
-  const [previewImageUrl, setPreviewImageUrl] = useState([
-    IMAGES.glasses3,
-    IMAGES.glasses10,
-    IMAGES.belt1,
-    IMAGES.shoe2,
-  ]);
+  const [previewImageUrl, setPreviewImageUrl] = useState([]);
 
   const handleClose = () => {
     setShow(false);
@@ -60,7 +70,7 @@ const ViewItemsDetails = () => {
 
   useEffect(() => {
     initialize();
-  }, [newImage]);
+  }, []);
 
   const initialize = async () => {
     try {
@@ -70,11 +80,20 @@ const ViewItemsDetails = () => {
 
       //check if the request to fetch item doesn't fail before setting values to display
       if (response && response.data) {
+        const cat = {
+          label: response.data.Category.name,
+          value: response.data.Category.name.toLowerCase(),
+        };
+        const status = {
+          label: response.data.state === true ? "In-Stock" : "Out-Of-Stock",
+          value: response.data.state,
+        };
         setValue("product_name", response.data.title);
         setValue("description", response.data.desc);
         setValue("price", response.data.price);
-        // setValue("email", profile.data.email);
-        // setValue("sex", gender);
+        setValue("category", cat);
+        setValue("available", status);
+        setPreviewImageUrl(response.data.ItemImages);
       }
 
       setNetworkRequest(false);
@@ -98,20 +117,25 @@ const ViewItemsDetails = () => {
   // create a preview
   const handleAddNewImage = (event) => {
     const uploaded_images = event.target.files;
-    console.log("checking image to upload", uploaded_images);
     const totalImages = uploaded_images.length + previewImageUrl.length;
 
     if (totalImages <= 4) {
       let newImageArray = [];
 
       for (let i = 0; i < uploaded_images.length; i++) {
-        console.log(uploaded_images[i]);
         let prev_image_file_path = URL.createObjectURL(uploaded_images[i]);
+        const img = {
+          ...uploaded_images[i],
+          file_name: prev_image_file_path,
+          blur_hash: "U8C$_;4n00%gD%%2t7V[00NG~q%2D%-;RjMx",
+          offline: "",
+        };
+        console.log(uploaded_images[i], img);
         // newImage.push(prev_image_file_path); // Collect the new images
-        newImageArray.push(uploaded_images[i]); // sends the newly added image to the state
-        setPreviewImageUrl((prevItems) => [...prevItems, prev_image_file_path]);
+        // setPreviewImageUrl((prevItems) => [...prevItems, prev_image_file_path]);
+        setPreviewImageUrl([...previewImageUrl, img]);
       }
-      setNewImage((prevImages) => [...prevImages, ...newImageArray]);
+      // setNewImage((prevImages) => [...prevImages, ...newImageArray]);
     } else {
       setPreviewImageUrl((prevItems) => [...prevItems]);
       alert("You can only upload a maximum of 4 images.");
@@ -129,12 +153,10 @@ const ViewItemsDetails = () => {
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      product_name: "John",
-      price: "Doe",
-      available: "out-of-stock",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur et, praesentium quod voluptatem, exercitationem soluta qui eligendi vel doloribus distinctio incidunt necessitatibus. Temporibus, delectus ipsum accusantium hic possimus suscipit nostrum.",
-      category: "1",
+      product_name: "",
+      price: "",
+      available: "",
+      description: "",
       image_upload: "1",
     },
   });
@@ -198,16 +220,20 @@ const ViewItemsDetails = () => {
               controlId="category"
             >
               <Form.Label>Category</Form.Label>
-              <Form.Select
-                required
-                aria-label="Default select example"
-                placeholder="Select..."
-                {...register("category")}
-              >
-                <option>Select...</option>
-                <option value="1">Male</option>
-                <option value="2">Female</option>
-              </Form.Select>
+              <Controller
+                name="category"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <Select
+                    required
+                    placeholder="Category..."
+                    {...register("category")}
+                    options={categoryOptions}
+                    onChange={(val) => onChange(val)}
+                    value={value}
+                  />
+                )}
+              />
               <ErrorMessage source={errors.category} />
             </Form.Group>
 
@@ -217,17 +243,21 @@ const ViewItemsDetails = () => {
               sm="6"
               controlId="available"
             >
-              <Form.Label>Available</Form.Label>
-              <Form.Select
-                required
-                aria-label="Default select example"
-                placeholder="Select..."
-                {...register("available")}
-              >
-                <option>Select...</option>
-                <option value="in-stock">In-Stock</option>
-                <option value="out-of-stock">Out-of-Stock</option>
-              </Form.Select>
+              <Form.Label>Status</Form.Label>
+              <Controller
+                name="available"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <Select
+                    required
+                    placeholder="Availability..."
+                    {...register("available")}
+                    options={availabilityOptions}
+                    onChange={(val) => onChange(val)}
+                    value={value}
+                  />
+                )}
+              />
               <ErrorMessage source={errors.available} />
             </Form.Group>
 
@@ -276,29 +306,27 @@ const ViewItemsDetails = () => {
             </span>
           </h2>
           <div className="row m-2 gap-3">
-            {previewImageUrl.map((img, index) => {
-              return (
-                <PrevImg className={`col-sm-6 border rounded`} key={index}>
-                  <img
-                    className="prev_img"
-                    height={"100%"}
-                    src={img}
-                    width={"100%"}
-                    alt=""
-                  />
-                  <BiTrashAlt
-                    onClick={() => {
-                      handleShow();
-                      setSelectedImage(index);
-                      console.log(previewImageUrl[index]);
-                    }}
-                    size={25}
-                    className="delete_icon"
-                  />
-                  <div className="overlay"></div>
-                </PrevImg>
-              );
-            })}
+            {previewImageUrl.length > 0 &&
+              previewImageUrl.map((img, index) => {
+                return (
+                  <PrevImg className={`col-sm-6 border rounded`} key={index}>
+                    <ImageComponent
+                      image={img}
+                      width={"100%"}
+                      height={"100%"}
+                    />
+                    <BiTrashAlt
+                      onClick={() => {
+                        handleShow();
+                        setSelectedImage(index);
+                      }}
+                      size={25}
+                      className="delete_icon"
+                    />
+                    <div className="overlay"></div>
+                  </PrevImg>
+                );
+              })}
           </div>
           <Col className="my-2" xs={"12"} md="6">
             <Form.Group controlId="image_upload">
@@ -313,7 +341,6 @@ const ViewItemsDetails = () => {
                     size="lg"
                     multiple
                     onChange={(e) => {
-                      console.log(e);
                       handleAddNewImage(e); // add the new image
                       field.onChange(e.target.files); // Update form state
                     }}
@@ -335,12 +362,10 @@ const ViewItemsDetails = () => {
           </Modal.Header>
           <Modal.Body>
             Are you sure you want to delete this Image?
-            <img
-              className="prev_img"
-              height={"100px"}
-              src={previewImageUrl[selectedImageIndex]}
-              width={"100px"}
-              alt=""
+            <ImageComponent
+              image={previewImageUrl[selectedImageIndex]}
+              width={"100%"}
+              height={"100%"}
             />
           </Modal.Body>
           <Modal.Footer>
@@ -350,7 +375,6 @@ const ViewItemsDetails = () => {
             <Button
               variant="success"
               onClick={() => {
-                // console.log(index, previewImageUrl[index]);
                 deleteItem(selectedImageIndex);
                 handleClose();
               }}

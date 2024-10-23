@@ -2,7 +2,7 @@ const categoryMap = ["Footwears", "Belts", "Shirts", "Glasses"];
 
 const categoryOptions = [
   { value: "footwears", label: "Footwears" },
-  { value: "Belts", label: "Belts" },
+  { value: "belts", label: "Belts" },
   { value: "shirts", label: "Shirt" },
   { value: "glasses", label: "Glasses" },
 ];

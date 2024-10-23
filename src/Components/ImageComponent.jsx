@@ -20,13 +20,28 @@ const StyledBlurhash = styled(Blurhash)`
   left: 0;
 `;
 
-const ImageComponent = ({ image, width, height }) => {
+const ImageComponent = ({ image, width, height, offline }) => {
   const [isLoaded, setLoaded] = useState(false);
   const [isLoadStarted, setLoadStarted] = useState(false);
 
   const handleLoad = () => {
     setLoaded(true);
   };
+
+  /*
+   <LazyLoadImage
+        key={image?.id}
+        src={`${
+          offline
+            ? image.file_name
+            : httpService.baseURL() + "/items/imgs/" + image?.file_name
+        }`}
+        width={width || "100%"}
+        height={height || 200}
+        onLoad={handleLoad}
+        beforeLoad={handleLoadStarted}
+      />
+  */
 
   const handleLoadStarted = () => {
     setLoadStarted(true);
