@@ -130,7 +130,7 @@ const ViewItemsDetails = () => {
           blur_hash: "U8C$_;4n00%gD%%2t7V[00NG~q%2D%-;RjMx",
           offline: "",
         };
-        console.log(uploaded_images[i], img);
+        console.log(prev_image_file_path);
         // newImage.push(prev_image_file_path); // Collect the new images
         // setPreviewImageUrl((prevItems) => [...prevItems, prev_image_file_path]);
         setPreviewImageUrl([...previewImageUrl, img]);
