@@ -54,16 +54,16 @@ const ViewItemsDetails = () => {
   // create a preview
   const handleAddNewImage = (event) => {
     const uploaded_images = event.target.files;
-    console.log("checking image to upload", uploaded_images);
     const totalImages = uploaded_images.length + previewImageUrl.length;
 
     if (totalImages <= 4) {
       let newImageArray = [];
 
       for (let i = 0; i < uploaded_images.length; i++) {
-        console.log(uploaded_images[i]);
+        console.log("uploaded img", uploaded_images[i]);
         let prev_image_file_path = URL.createObjectURL(uploaded_images[i]);
         // newImage.push(prev_image_file_path); // Collect the new images
+        console.log("checking image to upload", prev_image_file_path);
         newImageArray.push(uploaded_images[i]); // sends the newly added image to the state
         setPreviewImageUrl((prevItems) => [...prevItems, prev_image_file_path]);
       }
