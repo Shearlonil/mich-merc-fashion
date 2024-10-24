@@ -3,12 +3,12 @@ import * as yup from "yup";
 const schema = yup.object().shape({
   fname: yup.string().required("First Name is required"),
   lname: yup.string().required("Last Name is required"),
-  compName: yup.string().required("Company Name is required"),
+  // compName: yup.string().required("Company Name is required"),
 
-  country: yup.string().required("Choose a Country"),
-  address: yup.string().required("Price is required"),
-  town: yup.string().required("Price is required"),
-  state: yup.string().required("Price is required"),
+  country: yup.string().required("Country is required"),
+  address: yup.string().required("Address is required"),
+  town: yup.string().required("Town is required"),
+  state: yup.string().required("State is required"),
 
   phone_number: yup
     .string()
@@ -23,7 +23,7 @@ const schema = yup.object().shape({
     .string()
     .required("Choose a payment method")
     .oneOf(
-      ["credit_card", "paypal", "bank_transfer"],
+      ["credit_card", "cash_on_delivery"],
       "Invalid payment method selected"
     ),
 });

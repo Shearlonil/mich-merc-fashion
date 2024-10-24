@@ -24,7 +24,15 @@ const Checkout = () => {
       <Form className="p-4 border rounded-3">
         <div className="row">
           <div className="col-12 col-md-7 py-3">
-            <h4>Billing Details</h4>
+            <h4>
+              Billing{" "}
+              <span
+                className="text-primary"
+                style={{ fontFamily: "Abril Fatface" }}
+              >
+                Details
+              </span>
+            </h4>
             {/* <h4>Edit Info</h4> */}
             <Row className="mb-3">
               <Form.Group
@@ -57,22 +65,6 @@ const Checkout = () => {
                   {...register("lname")}
                 />
                 <ErrorMessage source={errors.lname} />
-              </Form.Group>
-
-              <Form.Group
-                className="my-2 my-sm-3"
-                as={Col}
-                xs="12"
-                controlId="compName"
-              >
-                <Form.Label>Company name (optional)</Form.Label>
-                <Form.Control
-                  required
-                  type="text"
-                  placeholder="Last Name..."
-                  {...register("compName")}
-                />
-                <ErrorMessage source={errors.compName} />
               </Form.Group>
 
               <Form.Group
@@ -212,21 +204,18 @@ const Checkout = () => {
                 <ErrorMessage source={errors.notes} />
               </Form.Group>
             </Row>
-            <div className="text-center">
-              <Button
-                className="rounded-pill"
-                variant="outline-primary"
-                type="submit"
-                size="lg"
-                onClick={handleSubmit(onSubmit)}
-              >
-                Update
-              </Button>
-            </div>
           </div>
 
           <div className="col-12 col-md-5 bg-light py-2 rounded-3 shadow-sm">
-            <h3>Your Order</h3>
+            <h3>
+              Your{" "}
+              <span
+                className="text-primary"
+                style={{ fontFamily: "Abril Fatface" }}
+              >
+                Order
+              </span>
+            </h3>
             <hr />
             <div className="d-flex border border-light my-2 shadow-sm">
               <span className="me-auto my-2 p-2 fw-bold h5">Product</span>
@@ -257,53 +246,6 @@ const Checkout = () => {
             </div>
             <hr />
 
-            {/* <Form.Group className="border border-light my-2 shadow-sm p-3">
-							<Form.Label>Payment Method</Form.Label>
-							<Controller
-								name="paymentMethod"
-								control={control}
-								defaultValue=""
-								render={({ field }) => (
-									<>
-										<Form.Check
-											className="py-3"
-											type="radio"
-											label="Direct bank transfer"
-											value="cash"
-											{...field}
-											isInvalid={!!errors.paymentMethod}
-										/>
-										<ErrorMessage source={errors.paymentMethod} />
-										<p className="bg-secondary-subtle p-3">
-											Make your payment directly into our bank account. Please
-											use your Order ID as the payment reference. Your order
-											will not be shipped until the funds have cleared in our
-											account.
-										</p>
-
-										<Form.Check
-											className="py-3"
-											type="radio"
-											label="Cash on Delivery"
-											value="card"
-											{...field}
-											isInvalid={!!errors.paymentMethod}
-										/>
-
-										<p className="bg-secondary-subtle p-3">
-											Pay with cash upon delivery.
-										</p>
-
-										{errors.paymentMethod && (
-											<Form.Control.Feedback type="invalid">
-												{errors.paymentMethod.message}
-											</Form.Control.Feedback>
-										)}
-									</>
-								)}
-							/>
-						</Form.Group> */}
-
             <Form.Group
               // {...register("paymentMethod")}
               className="border border-light my-2 shadow-sm p-3"
@@ -321,16 +263,8 @@ const Checkout = () => {
                   className="py-3"
                   name="paymentMethod"
                   type="radio"
-                  label="PayPal"
-                  value="paypal"
-                  {...register("paymentMethod")}
-                />
-                <Form.Check
-                  className="py-3"
-                  name="paymentMethod"
-                  type="radio"
-                  label="Bank Transfer"
-                  value="bank_transfer"
+                  label="Cash on delivery"
+                  value="cash_on_delivery"
                   {...register("paymentMethod")}
                 />
               </div>
@@ -344,9 +278,15 @@ const Checkout = () => {
               </label>
             </div>
             <div className="mt-3">
-              <button className="btn btn-outline-danger btn-lg rounded-pill">
+              <Button
+                className="rounded-pill"
+                variant="outline-danger"
+                type="submit"
+                size="lg"
+                onClick={handleSubmit(onSubmit)}
+              >
                 Place Order
-              </button>
+              </Button>
             </div>
           </div>
         </div>
