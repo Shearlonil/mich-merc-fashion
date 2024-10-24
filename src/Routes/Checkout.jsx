@@ -238,6 +238,13 @@ const Checkout = () => {
             </div>
             <div className="d-flex border border-light my-2 shadow-sm">
               <span className="me-auto my-2 p-2 ">
+                HP 250 G10 i3-1315U 250 G10,15.6, 8GB RAM, 256GB SSD DOS3.0 /
+                1yw x 2
+              </span>
+              <span className="ms-auto my-2 p-2">₦80,000.00</span>
+            </div>
+            <div className="d-flex border border-light my-2 shadow-sm">
+              <span className="me-auto my-2 p-2 ">
                 SANDISK 8GB FLASH DRIVE × 1
               </span>
               <span className="ms-auto my-2 p-2">₦85,000.00</span>
