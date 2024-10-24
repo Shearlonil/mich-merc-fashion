@@ -132,7 +132,7 @@ const Product = () => {
         className="d-flex gap-2 m-2 justify-content-center flex-nowrap"
         style={{ overflowX: "auto" }}
       >
-        {photos.map((img, index) => (
+        {photos.map((img) => (
           <div onClick={() => setMainImg(img)} key={Math.random() * new Date()}>
             <ImageComponent
               image={img}

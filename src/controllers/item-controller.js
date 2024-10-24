@@ -6,19 +6,45 @@ const create = async (data) => {
   formData.append("status", data.available.value);
   formData.append("price", data.price);
   formData.append("desc", data.description);
-  formData.append("category_id", data.category.value);
+  formData.append("category", data.category.value);
+  formData.append("discount", 0.0);
 
   // attach array of files
   for (var i = 0; i < data.image_upload.length; i++) {
     formData.append("imgs", data.image_upload[i]);
   }
-  console.log("Form data:", formData);
 
   return await httpService.post(`/items/create`, formData);
 };
 
+const update = async (id, formData) => {
+  let data = {
+    title: formData.product_name,
+    status: formData.available.value,
+    price: formData.price,
+    desc: formData.description,
+    discount: formData.discount,
+    category: formData.category.value,
+  };
+
+  return await httpService.put(`/items/update/${id}`, data);
+};
+
 const findById = async (item_id) => {
   return await httpService.get(`/items/find/${item_id}`);
+};
+
+const unlinkImg = async (item_id, img_id) => {
+  return await httpService.put(`/items/imgs/remove`, { item_id, img_id });
+};
+
+const updateImgs = async (item_id, data) => {
+  let formData = new FormData();
+  // attach array of files
+  for (var i = 0; i < data.image_upload.length; i++) {
+    formData.append("imgs", data.image_upload[i]);
+  }
+  return await httpService.put(`/items/imgs/update/${item_id}`, formData);
 };
 
 const random = async (limit) => {
@@ -57,17 +83,25 @@ const paginateItemsByCatName = async (
   });
 };
 
-const fetchRecentItems = async (id) => {
-  return await httpService.download(`/applicant/cv/${id}`);
+const productSearch = async (data) => {
+  return await httpService.post(`/items/search`, data);
+};
+
+const paginateProductSearch = async (data, pageNumber) => {
+  return await httpService.post(`/items/search/${pageNumber}`, data);
 };
 
 export default {
   create,
+  update,
   findById,
+  unlinkImg,
+  updateImgs,
   random,
   randomFetchWithCat,
   fetchRecentItemsByCatID,
   fetchRecentItemsByCatName,
   paginateItemsByCatName,
-  fetchRecentItems,
+  productSearch,
+  paginateProductSearch,
 };

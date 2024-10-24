@@ -80,8 +80,8 @@ const Category = () => {
         setMaxID(response.data[response.data.length - 1].id);
         setCatItems([...catItems, ...response.data]);
         /*  normally, we would call setPagedData(response.data.catItems) here but that isn't necessary because calling setCurrentPage(pageNumber)
-			would cause PaginationLite to re-render as currentPage is part of it's useEffect dependencies. This re-render triggers setPageChanged to be
-			called with currentPage number. the 'else if' block then executes causing setPagedData to be set  */
+            would cause PaginationLite to re-render as currentPage is part of it's useEffect dependencies. This re-render triggers setPageChanged to be
+            called with currentPage number. the 'else if' block then executes causing setPagedData to be set  */
         setCurrentPage(pageNumber);
       }
       // update page number

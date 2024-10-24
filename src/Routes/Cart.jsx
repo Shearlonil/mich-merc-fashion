@@ -120,7 +120,12 @@ const Cart = () => {
 
   return (
     <div className="container">
-      <h1 className="mt-4">Shopping Cart</h1>
+      <h1 className="mt-4">
+        Shopping{" "}
+        <span className="text-primary" style={{ fontFamily: "Abril Fatface" }}>
+          Cart
+        </span>
+      </h1>
 
       {/* only display in md. Never display in mobile view */}
       <div className="d-none d-md-block mt-4">

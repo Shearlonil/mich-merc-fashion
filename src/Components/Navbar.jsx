@@ -7,6 +7,7 @@ import { LuShoppingBag } from "react-icons/lu";
 import { useAuth } from "../app-context/auth-user-context";
 import { useCart } from "../app-context/cart-context";
 import handleErrMsg from "../Utils/error-handler";
+import { ThreeDotLoading } from "./react-loading-indicators/Indicator";
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -132,15 +133,37 @@ const NavBar = () => {
               >
                 CONTACT US
               </Link>
-              <Link
-                className="navbar-nav nav-item p-2 text-decoration-none nav-link"
-                style={{ fontSize: "1.2em", fontVariant: "all-small-caps" }}
-                to={"/dashboard"}
-                onClick={handleNavSelect}
-              >
-                DASHBOARD
-              </Link>
+              {user && (
+                <Link
+                  className="navbar-nav nav-item p-2 text-decoration-none nav-link"
+                  style={{ fontSize: "1.2em", fontVariant: "all-small-caps" }}
+                  to={"/dashboard"}
+                  onClick={handleNavSelect}
+                >
+                  DASHBOARD
+                </Link>
+              )}
             </Nav>
+
+            {user && (
+              <Nav.Link
+                className={`navbar-nav nav-item p-2 link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover fw-bold ${
+                  isLoggingOut && "disabled"
+                }`}
+                eventKey={8}
+                onClick={() => handleLogout()}
+              >
+                {isLoggingOut && (
+                  <ThreeDotLoading
+                    variant="windmill"
+                    color="#0000ff"
+                    size="small"
+                  />
+                )}
+                {!isLoggingOut && `Logout`}
+              </Nav.Link>
+            )}
+
             <Link to={"/cart"} onClick={handleNavSelect}>
               <button type="button" className="btn position-relative p-0">
                 <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">

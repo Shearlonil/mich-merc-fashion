@@ -46,7 +46,7 @@ const CreateItems = () => {
     handleOpenModal();
   };
 
-  const handleOpenModal = (id) => {
+  const handleOpenModal = () => {
     setDisplayMsg("Create Item?");
     setShowModal(true);
   };
@@ -63,6 +63,7 @@ const CreateItems = () => {
 
       setPreviewImageUrl([]);
       reset();
+      toast.info("Item successfully created");
     } catch (error) {
       // Incase of 408 Timeout error (Token Expiration), perform refresh
       try {
@@ -106,8 +107,7 @@ const CreateItems = () => {
         setPreviewImageUrl((prevItems) => [...prevItems, prev_image_file_path]);
       }
     } else {
-      event.target.value = "";
-      alert("Maximum of 4 images allowed.");
+      toast.error("Maximum of 4 images allowed.");
     }
   };
 
@@ -133,8 +133,9 @@ const CreateItems = () => {
       color: "rgba(0, 123, 255, 0.75)", // customize color of the dropdown arrow
     }),
   };
+
   return (
-    <div className="container">
+    <div className="container mt-auto mb-auto">
       <Form className="my-2 border rounded p-4 bg-light">
         <Row>
           <Col className="my-2" md={"6"} xs={"12"}>
