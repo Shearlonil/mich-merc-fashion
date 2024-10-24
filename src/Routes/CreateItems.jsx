@@ -46,7 +46,7 @@ const CreateItems = () => {
     handleOpenModal();
   };
 
-  const handleOpenModal = (id) => {
+  const handleOpenModal = () => {
     setDisplayMsg("Create Item?");
     setShowModal(true);
   };
@@ -107,8 +107,7 @@ const CreateItems = () => {
         setPreviewImageUrl((prevItems) => [...prevItems, prev_image_file_path]);
       }
     } else {
-      event.target.value = "";
-      alert("Maximum of 4 images allowed.");
+      toast.error("Maximum of 4 images allowed.");
     }
   };
 

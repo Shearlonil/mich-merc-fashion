@@ -408,13 +408,13 @@ const ViewItems = () => {
 
         {!networkRequest && pagedData.length > 0 && buildProductCards()}
         {networkRequest && buildSkeleton()}
+        <PaginationLite
+          itemCount={totalItemsCount}
+          pageSize={pageSize}
+          setPageChanged={setPageChanged}
+          pageNumber={currentPage}
+        />
       </div>
-      <PaginationLite
-        itemCount={totalItemsCount}
-        pageSize={pageSize}
-        setPageChanged={setPageChanged}
-        pageNumber={currentPage}
-      />
     </>
   );
 };
