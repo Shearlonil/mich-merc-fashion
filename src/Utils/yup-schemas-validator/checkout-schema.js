@@ -15,11 +15,11 @@ const schema = yup.object().shape({
     .required("Phone number is required")
     .matches(
       /^(\+?\d{1,3}[- ]?)?\d{10}$/,
-      "Phone number must be valid and contain 10 digits"
+      "Phone number must be valid and more than 10 digits"
     ),
   email: yup.string().required("Email is required"),
   notes: yup.string("A note here"),
-  paymentMethod: yup
+  payment_method: yup
     .string()
     .required("Choose a payment method")
     .oneOf(

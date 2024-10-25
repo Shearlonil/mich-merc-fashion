@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import Skeleton from "react-loading-skeleton";
 import { useForm } from "react-hook-form";
+import numeral from "numeral";
 
 import { capitalizeFirstLetter } from "../Utils/helpers";
 import IMAGES from "../images/images";
@@ -121,6 +122,7 @@ const Product = () => {
   const handleConfirmAction = async () => {
     setShowModal(false);
     const i = { ...item, qty };
+    // remove the desc field, we don't need too much baggage :)
     delete i.desc;
     await addToCart(i);
   };
@@ -310,9 +312,38 @@ const Product = () => {
                   {!item && <Skeleton />}
                 </p>
                 <h2 className="p-3 poppins">
-                  {item && `£${item.price}`}
+                  {item && (
+                    <>
+                      <span
+                        className={`text-danger ${
+                          item.discount > 0.0 ? "strike" : ""
+                        }`}
+                      >
+                        <span className="text-dark">£{item.price}</span>
+                      </span>
+                      {item && item.discount > 0 && (
+                        <span className="ms-3 text-danger discount">
+                          {numeral(item.discount).value()}% off
+                        </span>
+                      )}
+                    </>
+                  )}
                   {!item && <Skeleton />}
                 </h2>
+                {item && item.discount > 0 && (
+                  <span className="p-3 poppins text-primary fw-bold">
+                    £
+                    {numeral(item.price)
+                      .subtract(
+                        numeral(item.discount)
+                          .divide(100)
+                          .multiply(item.price)
+                          .value()
+                      )
+                      .value()}
+                  </span>
+                )}
+
                 <Form.Group className="my-2 d-flex gap-3">
                   <Form.Control
                     required

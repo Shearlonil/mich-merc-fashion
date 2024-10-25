@@ -9,6 +9,14 @@ h6 {
   font-family: "Abril Fatface", serif;
 }
 
+.strike {
+  text-decoration: line-through;
+}
+
+.discount {
+  font-size: 17px;
+}
+
 p,
 span,
 button {

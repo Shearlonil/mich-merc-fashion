@@ -1,13 +1,19 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
+import numeral from "numeral";
 
 import ErrorMessage from "../Components/ErrorMessage";
 import { useForm } from "react-hook-form";
 import { categoryOptions } from "../../data";
 import { schema } from "../Utils/yup-schemas-validator/checkout-schema";
+import { useCart } from "../app-context/cart-context";
 
 const Checkout = () => {
+  const { getCartItems } = useCart();
+
+  const [total, setTotal] = useState(0);
+
   const {
     register,
     handleSubmit,
@@ -18,6 +24,36 @@ const Checkout = () => {
   const onSubmit = (data) => {
     console.log(data);
   };
+
+  useEffect(() => {
+    setTotal(
+      getCartItems().reduce(
+        (accumulator, currentVal) =>
+          numeral(currentVal.qty)
+            .multiply(currentVal.price)
+            .add(accumulator)
+            .value(),
+        0
+      )
+    );
+  }, []);
+
+  const buildCartSummary = () => {
+    return getCartItems().map((item) => {
+      const { id, title, price, qty } = item;
+      return (
+        <div className="d-flex border border-light my-2 shadow-sm" key={id}>
+          <span className="me-auto my-2 p-2 ">
+            {title} x {qty}
+          </span>
+          <span className="ms-auto my-2 p-2">
+            £{numeral(price).multiply(qty).value()}
+          </span>
+        </div>
+      );
+    });
+  };
+
   return (
     <div className="container-lg">
       <h2 className="text-center my-5 display-5">Checkout</h2>
@@ -41,7 +77,7 @@ const Checkout = () => {
                 xs="12"
                 controlId="fname"
               >
-                <Form.Label>First Name</Form.Label>
+                <Form.Label>First Name *</Form.Label>
                 <Form.Control
                   required
                   type="text"
@@ -57,7 +93,7 @@ const Checkout = () => {
                 xs="12"
                 controlId="lname"
               >
-                <Form.Label>Last Name</Form.Label>
+                <Form.Label>Last Name *</Form.Label>
                 <Form.Control
                   required
                   type="text"
@@ -74,19 +110,12 @@ const Checkout = () => {
                 controlId="country"
               >
                 <Form.Label>Country / Region *</Form.Label>
-                <Form.Select
+                <Form.Control
                   required
-                  aria-label="Default select example"
-                  placeholder="Select..."
+                  type="text"
+                  placeholder="Country..."
                   {...register("country")}
-                >
-                  <option>Select...</option>
-                  {categoryOptions.map(({ value, label }, index) => (
-                    <option key={index} value={value}>
-                      {label}
-                    </option>
-                  ))}
-                </Form.Select>
+                />
                 <ErrorMessage source={errors.country} />
               </Form.Group>
 
@@ -118,13 +147,9 @@ const Checkout = () => {
               >
                 <Form.Label>Town / City *</Form.Label>
                 <Form.Control
-                  as={"textarea"}
                   required
-                  style={{
-                    height: "100px",
-                  }}
                   type="text"
-                  placeholder="Town / City *..."
+                  placeholder="Town..."
                   {...register("town")}
                 />
                 <ErrorMessage source={errors.town} />
@@ -137,19 +162,12 @@ const Checkout = () => {
                 controlId="state"
               >
                 <Form.Label>State *</Form.Label>
-                <Form.Select
+                <Form.Control
                   required
-                  aria-label="Default select example"
-                  placeholder="Select..."
+                  type="text"
+                  placeholder="State..."
                   {...register("state")}
-                >
-                  <option>Select...</option>
-                  {categoryOptions.map(({ value, label }, index) => (
-                    <option key={index} value={value}>
-                      {label}
-                    </option>
-                  ))}
-                </Form.Select>
+                />
                 <ErrorMessage source={errors.state} />
               </Form.Group>
 
@@ -221,51 +239,36 @@ const Checkout = () => {
               <span className="me-auto my-2 p-2 fw-bold h5">Product</span>
               <span className="ms-auto my-2 p-2 fw-bold">Subtotal</span>
             </div>
-            <div className="d-flex border border-light my-2 shadow-sm">
-              <span className="me-auto my-2 p-2 ">Brown Leather Shoe x 2</span>
-              <span className="ms-auto my-2 p-2">₦80,000.00</span>
-            </div>
-            <div className="d-flex border border-light my-2 shadow-sm">
-              <span className="me-auto my-2 p-2 ">
-                HP 250 G10 i3-1315U 250 G10,15.6, 8GB RAM, 256GB SSD DOS3.0 /
-                1yw x 2
-              </span>
-              <span className="ms-auto my-2 p-2">₦80,000.00</span>
-            </div>
-            <div className="d-flex border border-light my-2 shadow-sm">
-              <span className="me-auto my-2 p-2 ">
-                SANDISK 8GB FLASH DRIVE × 1
-              </span>
-              <span className="ms-auto my-2 p-2">₦85,000.00</span>
-            </div>
+
+            {buildCartSummary()}
 
             <hr />
             <div className="d-flex border border-light my-2 shadow-sm">
               <span className="me-auto my-2 p-2 h6">Total</span>
-              <span className="ms-auto my-2 p-2">₦85,000.00</span>
+              <span className="ms-auto my-2 p-2 text-danger fw-bold">
+                £{total}
+              </span>
             </div>
             <hr />
 
-            <Form.Group
-              // {...register("paymentMethod")}
-              className="border border-light my-2 shadow-sm p-3"
-            >
+            <Form.Group className="border border-light my-2 shadow-sm p-3">
               <Form.Label>Payment Method</Form.Label>
               <div>
                 <Form.Check
                   className="py-3"
-                  name="paymentMethod"
+                  name="payment_method"
                   type="radio"
                   label="Credit Card"
                   value="credit_card"
+                  {...register("payment_method")}
                 />
                 <Form.Check
                   className="py-3"
-                  name="paymentMethod"
+                  name="payment_method"
                   type="radio"
                   label="Cash on delivery"
                   value="cash_on_delivery"
-                  {...register("paymentMethod")}
+                  {...register("payment_method")}
                 />
               </div>
               <ErrorMessage source={errors.payment_method} />

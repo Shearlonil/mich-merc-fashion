@@ -85,32 +85,32 @@ const NavBar = () => {
                 <Dropdown.Menu>
                   <Dropdown.Item
                     onClick={() => {
+                      handleNavSelect;
                       navigate("/shop/glasses");
-                      onClick = { handleNavSelect };
                     }}
                   >
                     Glasses
                   </Dropdown.Item>
                   <Dropdown.Item
                     onClick={() => {
+                      handleNavSelect;
                       navigate("/shop/belts");
-                      onClick = { handleNavSelect };
                     }}
                   >
                     Belts
                   </Dropdown.Item>
                   <Dropdown.Item
                     onClick={() => {
+                      handleNavSelect;
                       navigate("/shop/footwears");
-                      onClick = { handleNavSelect };
                     }}
                   >
                     Footwares
                   </Dropdown.Item>
                   <Dropdown.Item
                     onClick={() => {
+                      handleNavSelect;
                       navigate("/shop/shirts");
-                      onClick = { handleNavSelect };
                     }}
                   >
                     Shirts
