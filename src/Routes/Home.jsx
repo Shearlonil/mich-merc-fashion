@@ -10,10 +10,9 @@ import handleErrMsg from "../Utils/error-handler";
 import EllipsisText from "../Components/EllipsisText";
 import ImageComponent from "../Components/ImageComponent";
 import itemController from "../controllers/item-controller";
+import SemiProductCard from "../Components/SemiProductCard";
 
 const Home = () => {
-  const navigate = useNavigate();
-
   const [randomItems, setRandomItems] = useState([]);
   const [networkRequest, setNetworkRequest] = useState(false);
 
@@ -41,32 +40,15 @@ const Home = () => {
 
   const createRandomItems = () => {
     return randomItems.map((randomItem, index) => (
-      <div className="" key={Math.random() * new Date() * index}>
-        <div
-          className="d-flex flex-column justify-content-between border p-3"
-          style={{ height: "20rem", minWidth: "10rem" }}
-        >
-          <small className="poppins">{randomItem.name}</small>
-          <h5 className="fw-normal">
-            <EllipsisText
-              styles={{ style: { fontFamily: "Abril Fatface" } }}
-              message={randomItem.title}
-              maxLength={10}
-              clickable={false}
-            />
-          </h5>
-          <ImageComponent image={randomItem.img} height={130} />
-          <div className="d-flex justify-content-between">
-            <p className="m-0">£{randomItem.price}</p>
-            <button
-              onClick={() => navigate(`/product/${randomItem.id}`)}
-              className="d-flex align-item-center justify-content-center btn btn-outline-dark py-1 px-2 rounded-circle"
-            >
-              <BsArrowRight />
-            </button>
-          </div>
-        </div>
-      </div>
+      <SemiProductCard
+        key={Math.random() * new Date() * index}
+        id={randomItem.id}
+        cat_name={randomItem.name}
+        discount={randomItem.discount}
+        title={randomItem.title}
+        img={randomItem.img}
+        price={randomItem.price}
+      />
     ));
   };
 

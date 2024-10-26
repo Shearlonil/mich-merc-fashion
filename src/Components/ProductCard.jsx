@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import numeral from "numeral";
 import { Link } from "react-router-dom";
 import { Card } from "react-bootstrap";
 import ImageComponent from "./ImageComponent";
@@ -11,7 +12,40 @@ const Wrapper = styled.div`
 `;
 
 const ProductCard = ({ productInfo }) => {
-  const { id, desc, title, ItemImages, price } = productInfo;
+  const { id, desc, discount, title, ItemImages, price } = productInfo;
+
+  const displayDiscount = () => {
+    return (
+      <div>
+        <h2 className="poppins">
+          <span className="poppins text-dark fw-bold">
+            £
+            {numeral(price)
+              .subtract(numeral(discount).divide(100).multiply(price).value())
+              .format("£0,0.00")}
+          </span>
+        </h2>
+        <>
+          <span className={`text-danger ${discount > 0.0 ? "strike" : ""}`}>
+            <span className="text-dark">£{price}</span>
+          </span>
+          {discount && discount > 0 && (
+            <span className="ms-3 text-danger discount">
+              -{numeral(discount).value()}%
+            </span>
+          )}
+        </>
+      </div>
+    );
+  };
+
+  const displayPrice = () => {
+    return (
+      <h4>
+        <span>£{numeral(price).value()}</span>
+      </h4>
+    );
+  };
 
   return (
     <Wrapper>
@@ -30,14 +64,12 @@ const ProductCard = ({ productInfo }) => {
                 maxLength={30}
                 clickable={false}
               />
-              {/* {title} */}
             </h4>
           </Card.Header>
           <Card.Body className="d-flex flex-column justify-content-between">
             <Card.Title className="">
-              <h4>
-                <span>£{price}</span>
-              </h4>
+              {discount && discount > 0 && displayDiscount()}
+              {discount && discount == 0 && displayPrice()}
             </Card.Title>
             <Card.Text>
               <EllipsisText message={desc} maxLength={40} clickable={false} />

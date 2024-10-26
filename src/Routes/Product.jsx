@@ -20,6 +20,7 @@ import { useCart } from "../app-context/cart-context";
 import ErrorMessage from "../Components/ErrorMessage";
 import ConfirmDialogComp from "../Components/ConfirmDialogComp";
 import CartItem from "../models/CartItem";
+import SemiProductCard from "../Components/SemiProductCard";
 
 const ScrollBar = styled.div`
   ::-webkit-scrollbar {
@@ -164,32 +165,15 @@ const Product = () => {
 
   const createRandomItems = () => {
     return randomItems.map((randomItem, index) => (
-      <div className="" key={Math.random() * new Date() * index}>
-        <div
-          className="d-flex flex-column justify-content-between border p-3"
-          style={{ height: "20rem", minWidth: "10rem" }}
-        >
-          <small className="poppins">{item.Category.name}</small>
-          <h5 className="fw-normal">
-            <EllipsisText
-              styles={{ style: { fontFamily: "Abril Fatface" } }}
-              message={randomItem.title}
-              maxLength={10}
-              clickable={false}
-            />
-          </h5>
-          <ImageComponent image={randomItem.img} height={130} />
-          <div className="d-flex justify-content-between">
-            <p className="m-0">£{randomItem.price}</p>
-            <button
-              onClick={() => navigate(`/product/${randomItem.id}`)}
-              className="d-flex align-item-center justify-content-center btn btn-outline-dark py-1 px-2 rounded-circle"
-            >
-              <BsArrowRight />
-            </button>
-          </div>
-        </div>
-      </div>
+      <SemiProductCard
+        key={Math.random() * new Date() * index}
+        id={randomItem.id}
+        cat_name={item.Category.name}
+        discount={randomItem.discount}
+        title={randomItem.title}
+        img={randomItem.img}
+        price={randomItem.price}
+      />
     ));
   };
 
@@ -257,7 +241,7 @@ const Product = () => {
     return (
       <h2 className="poppins">
         <span className="poppins text-dark fw-bold">
-          £{numeral(item.price).format("£0,0.00")}
+          £{numeral(item.price).value()}
         </span>
       </h2>
     );

@@ -35,7 +35,7 @@ export const CartProvider = ({ children }) => {
       const token = await generateToken({ items }, `${result}m`);
       setCartToken(token);
     } catch (ex) {
-      // if no token exist, generate new one
+      // if no token exist or exp token, generate new one
       const items = [item];
       const token = await generateToken({ items }, "1440m"); //1440m is a day
       setCartToken(token);
@@ -114,6 +114,7 @@ export const CartProvider = ({ children }) => {
         throw new Error("Null");
       }
     } catch (error) {
+      // don't clear and throw error here because count is mostly used by navbar which should show 0 no matter what
       return 0;
     }
   };
