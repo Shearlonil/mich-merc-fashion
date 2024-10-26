@@ -19,6 +19,7 @@ import EllipsisText from "../Components/EllipsisText";
 import { useCart } from "../app-context/cart-context";
 import ErrorMessage from "../Components/ErrorMessage";
 import ConfirmDialogComp from "../Components/ConfirmDialogComp";
+import CartItem from "../models/CartItem";
 
 const ScrollBar = styled.div`
   ::-webkit-scrollbar {
@@ -121,10 +122,9 @@ const Product = () => {
 
   const handleConfirmAction = async () => {
     setShowModal(false);
-    const i = { ...item, qty };
-    // remove the desc field, we don't need too much baggage :)
-    delete i.desc;
-    await addToCart(i);
+    const cartItem = new CartItem(item);
+    cartItem.qty = qty;
+    await addToCart(cartItem);
   };
 
   // display associated images for item
@@ -224,6 +224,45 @@ const Product = () => {
     }
   };
 
+  const displayDiscount = () => {
+    return (
+      <div>
+        <h2 className="poppins">
+          <span className="poppins text-dark fw-bold">
+            £
+            {numeral(item.price)
+              .subtract(
+                numeral(item.discount).divide(100).multiply(item.price).value()
+              )
+              .format("£0,0.00")}
+          </span>
+        </h2>
+        <>
+          <span
+            className={`text-danger ${item.discount > 0.0 ? "strike" : ""}`}
+          >
+            <span className="text-dark">£{item.price}</span>
+          </span>
+          {item && item.discount > 0 && (
+            <span className="ms-3 text-danger discount">
+              -{numeral(item.discount).value()}%
+            </span>
+          )}
+        </>
+      </div>
+    );
+  };
+
+  const displayPrice = () => {
+    return (
+      <h2 className="poppins">
+        <span className="poppins text-dark fw-bold">
+          £{numeral(item.price).format("£0,0.00")}
+        </span>
+      </h2>
+    );
+  };
+
   const noItemFound = () => {
     return (
       <div className="">
@@ -311,37 +350,13 @@ const Product = () => {
                   {item && item.desc}
                   {!item && <Skeleton />}
                 </p>
-                <h2 className="p-3 poppins">
-                  {item && (
-                    <>
-                      <span
-                        className={`text-danger ${
-                          item.discount > 0.0 ? "strike" : ""
-                        }`}
-                      >
-                        <span className="text-dark">£{item.price}</span>
-                      </span>
-                      {item && item.discount > 0 && (
-                        <span className="ms-3 text-danger discount">
-                          {numeral(item.discount).value()}% off
-                        </span>
-                      )}
-                    </>
-                  )}
-                  {!item && <Skeleton />}
-                </h2>
-                {item && item.discount > 0 && (
-                  <span className="p-3 poppins text-primary fw-bold">
-                    £
-                    {numeral(item.price)
-                      .subtract(
-                        numeral(item.discount)
-                          .divide(100)
-                          .multiply(item.price)
-                          .value()
-                      )
-                      .value()}
-                  </span>
+
+                {item && item.discount > 0 && displayDiscount()}
+                {item && item.discount <= 0 && displayPrice()}
+                {!item && (
+                  <h2>
+                    <Skeleton />
+                  </h2>
                 )}
 
                 <Form.Group className="my-2 d-flex gap-3">
@@ -379,7 +394,7 @@ const Product = () => {
                 <span>Related Products</span>
               </h2>
               <div className="d-flex flex-column flex-md-row gap-2">
-                {!networkRequest && createRandomItems()}
+                {!networkRequest && item && createRandomItems()}
                 {networkRequest && displayRandomItemsSkeleton()}
                 {!networkRequest && randomItems.length === 0 && noItemFound()}
               </div>

@@ -13,6 +13,9 @@ const Cart = () => {
   const navigate = useNavigate();
 
   const [total, setTotal] = useState(0);
+  const [cartItems, setCartItems] = useState([]);
+  // for controlling the increment and decrement buttons while updating cart
+  const [updating, setUpdating] = useState(false);
 
   const { getCartItems, updateCart, removeFromCart, clear } = useCart();
 
@@ -21,17 +24,27 @@ const Cart = () => {
   const [removedCartItem, setRemovedCartItem] = useState(null);
 
   useEffect(() => {
-    setTotal(
-      getCartItems().reduce(
-        (accumulator, currentVal) =>
-          numeral(currentVal.qty)
-            .multiply(currentVal.price)
-            .add(accumulator)
-            .value(),
-        0
-      )
-    );
-  }, [getCartItems()]);
+    initialize();
+  }, [getCartItems]);
+
+  const initialize = async () => {
+    try {
+      const items = await getCartItems();
+      setCartItems(items);
+      setTotal(
+        items.reduce(
+          (accumulator, currentVal) =>
+            numeral(currentVal.qty)
+              .multiply(currentVal.salesPrice)
+              .add(accumulator)
+              .value(),
+          0
+        )
+      );
+    } catch (error) {
+      // do nothing
+    }
+  };
 
   const handleOpenModal = (data) => {
     if (data) {
@@ -53,44 +66,53 @@ const Cart = () => {
       try {
         await removeFromCart(removedCartItem);
         setTotal(
-          getCartItems().reduce(
+          await getCartItems().reduce(
             (accumulator, currentVal) =>
               numeral(currentVal.qty)
-                .multiply(currentVal.price)
+                .multiply(currentVal.salesPrice)
                 .add(accumulator)
                 .value(),
             0
           )
         );
+        setCartItems(await getCartItems());
       } catch (error) {
         toast.error("Stale Cart");
         // clear cart
         clear();
+        setCartItems([]);
         setTotal(0);
       }
     } else {
+      // clear button clicked
       clear();
     }
   };
 
   const increment = async (data) => {
     try {
+      setUpdating(true);
       data.qty++;
       await updateCart(data);
+      const items = await getCartItems();
       setTotal(
-        getCartItems().reduce(
+        items.reduce(
           (accumulator, currentVal) =>
             numeral(currentVal.qty)
-              .multiply(currentVal.price)
+              .multiply(currentVal.salesPrice)
               .add(accumulator)
               .value(),
           0
         )
       );
+      setCartItems(items);
+      setUpdating(false);
     } catch (error) {
       toast.error("Stale Cart");
+      setUpdating(false);
       // clear cart
       clear();
+      setCartItems([]);
       setTotal(0);
     }
   };
@@ -98,23 +120,30 @@ const Cart = () => {
   const decrement = async (data) => {
     try {
       if (data.qty > 1) {
+        setUpdating(true);
         data.qty--;
         await updateCart(data);
+        const items = await getCartItems();
         setTotal(
-          getCartItems().reduce(
+          items.reduce(
             (accumulator, currentVal) =>
               numeral(currentVal.qty)
-                .multiply(currentVal.price)
+                .multiply(currentVal.salesPrice)
                 .add(accumulator)
                 .value(),
             0
           )
         );
+        setCartItems(items);
+        setUpdating(false);
       }
     } catch (error) {
       toast.error("Stale Cart");
+      setUpdating(false);
       // clear cart
       clear();
+      setCartItems([]);
+      setTotal(0);
     }
   };
 
@@ -138,16 +167,16 @@ const Cart = () => {
       </div>
       <hr />
 
-      {getCartItems().length > 0 ? (
-        getCartItems().map((item) => {
-          const { id, title, ItemImages, price, qty } = item;
+      {cartItems.length > 0 ? (
+        cartItems.map((item) => {
+          const { id, title, ItemImages, salesPrice, qty } = item;
           return (
             <div key={qty * id}>
               <div className="row mt-4">
                 <div className="col-md-6 col-12">
                   <div className="d-flex">
                     <ImageComponent
-                      image={ItemImages[0]}
+                      image={ItemImages}
                       width={"100px"}
                       height={"100px"}
                     />
@@ -173,21 +202,27 @@ const Cart = () => {
                 <div className="col-md-2 col-4">
                   <span
                     onClick={() => increment(item)}
-                    className="btn btn-outline-dark py-1 px-2 rounded-circle"
+                    className={`btn btn-outline-dark py-1 px-2 rounded-circle ${
+                      updating ? "disabled" : ""
+                    }`}
                   >
                     <MdAdd />
                   </span>
                   <span className="ms-2 me-2">{qty}</span>
                   <button
                     onClick={() => decrement(item)}
-                    className="btn btn-outline-danger py-1 px-2 rounded-circle"
+                    className={`btn btn-outline-danger py-1 px-2 rounded-circle ${
+                      updating ? "disabled" : ""
+                    }`}
                   >
                     <MdRemove />
                   </button>
                 </div>
-                <div className="col-md-2 col-4">£{price}</div>
+                <div className="col-md-2 col-4">£{salesPrice}</div>
                 <div className="col-md-2 col-4 fw-bold">
-                  {numeral(qty).multiply(price).format("£0,0.00")}
+                  {numeral(item.qty)
+                    .multiply(item.salesPrice)
+                    .format("£0,0.00")}
                 </div>
               </div>
               <hr />
@@ -207,7 +242,7 @@ const Cart = () => {
         <div className="d-flex gap-4 justify-content-end">
           <button
             className={`btn btn-sm btn-outline-danger px-3 rounded-pill ${
-              getCartItems().length > 0 ? "" : "disabled"
+              cartItems.length > 0 ? "" : "disabled"
             }`}
             onClick={() => handleOpenModal()}
           >
@@ -216,7 +251,7 @@ const Cart = () => {
 
           <button
             className={`btn btn-lg btn-outline-dark px-3 rounded-pill ${
-              getCartItems().length > 0 ? "" : "disabled"
+              cartItems.length > 0 ? "" : "disabled"
             }`}
             onClick={() => navigate("checkout")}
           >

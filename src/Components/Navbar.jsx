@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Dropdown, Nav, Navbar } from "react-bootstrap";
 import IMAGES from "../images/images";
 import { Link, useNavigate } from "react-router-dom";
@@ -13,12 +13,21 @@ const NavBar = () => {
   const navigate = useNavigate();
 
   const [expanded, setExpanded] = useState(false);
+  const [total, setTotal] = useState(0);
 
   const { authUser, logout } = useAuth();
   const user = authUser();
   const { count } = useCart();
 
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  useEffect(() => {
+    initialize();
+  }, [count]);
+
+  const initialize = async () => {
+    setTotal(await count());
+  };
 
   const handleToggle = () => {
     setExpanded(!expanded);
@@ -167,7 +176,7 @@ const NavBar = () => {
             <Link to={"/cart"} onClick={handleNavSelect}>
               <button type="button" className="btn position-relative p-0">
                 <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                  {count()}
+                  {total}
                   <span className="visually-hidden">shopping cart items</span>
                 </span>
                 <LuShoppingBag size={30} />

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Col, FloatingLabel, Form, Row, Table } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Select from "react-select";
 import Skeleton from "react-loading-skeleton";

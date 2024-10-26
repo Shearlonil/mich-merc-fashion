@@ -5,7 +5,6 @@ import numeral from "numeral";
 
 import ErrorMessage from "../Components/ErrorMessage";
 import { useForm } from "react-hook-form";
-import { categoryOptions } from "../../data";
 import { schema } from "../Utils/yup-schemas-validator/checkout-schema";
 import { useCart } from "../app-context/cart-context";
 
@@ -13,6 +12,7 @@ const Checkout = () => {
   const { getCartItems } = useCart();
 
   const [total, setTotal] = useState(0);
+  const [cartItems, setCartItems] = useState([]);
 
   const {
     register,
@@ -26,28 +26,38 @@ const Checkout = () => {
   };
 
   useEffect(() => {
-    setTotal(
-      getCartItems().reduce(
-        (accumulator, currentVal) =>
-          numeral(currentVal.qty)
-            .multiply(currentVal.price)
-            .add(accumulator)
-            .value(),
-        0
-      )
-    );
+    initialize();
   }, []);
 
+  const initialize = async () => {
+    try {
+      const items = await getCartItems();
+      setCartItems(items);
+      setTotal(
+        items.reduce(
+          (accumulator, currentVal) =>
+            numeral(currentVal.qty)
+              .multiply(currentVal.salesPrice)
+              .add(accumulator)
+              .value(),
+          0
+        )
+      );
+    } catch (error) {
+      // do nothing
+    }
+  };
+
   const buildCartSummary = () => {
-    return getCartItems().map((item) => {
-      const { id, title, price, qty } = item;
+    return cartItems.map((item) => {
+      const { id, title, salesPrice, qty } = item;
       return (
         <div className="d-flex border border-light my-2 shadow-sm" key={id}>
           <span className="me-auto my-2 p-2 ">
             {title} x {qty}
           </span>
           <span className="ms-auto my-2 p-2">
-            £{numeral(price).multiply(qty).value()}
+            £{numeral(salesPrice).multiply(qty).value()}
           </span>
         </div>
       );
