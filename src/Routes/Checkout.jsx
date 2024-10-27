@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Link, useNavigate } from "react-router-dom";
 import numeral from "numeral";
+import { toast } from "react-toastify";
 
 import ErrorMessage from "../Components/ErrorMessage";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { schema } from "../Utils/yup-schemas-validator/checkout-schema";
 import { useCart } from "../app-context/cart-context";
+import purchaseController from "../controllers/purchase-controller";
+import handleErrMsg from "../Utils/error-handler";
 
 const Checkout = () => {
-  const { getCartItems } = useCart();
+  const navigate = useNavigate();
+
+  const { getCartItems, getToken, clear } = useCart();
 
   const [total, setTotal] = useState(0);
   const [cartItems, setCartItems] = useState([]);
@@ -21,8 +27,18 @@ const Checkout = () => {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    data.cart = getToken();
+    try {
+      await purchaseController.checkout(data);
+      toast.info(
+        `Order successful. A mail has been sent to ${data.email} with the transaction id. Please check your spam if not found in inbox`
+      );
+      clear();
+      navigate("/shop");
+    } catch (error) {
+      toast.error(handleErrMsg(error).msg);
+    }
   };
 
   useEffect(() => {
@@ -269,7 +285,7 @@ const Checkout = () => {
                   name="payment_method"
                   type="radio"
                   label="Credit Card"
-                  value="credit_card"
+                  value="credit card"
                   {...register("payment_method")}
                 />
                 <Form.Check
@@ -277,22 +293,45 @@ const Checkout = () => {
                   name="payment_method"
                   type="radio"
                   label="Cash on delivery"
-                  value="cash_on_delivery"
+                  value="cash on delivery"
                   {...register("payment_method")}
                 />
               </div>
               <ErrorMessage source={errors.payment_method} />
             </Form.Group>
 
-            <div>
-              <label className="d-flex gap-2 p-3" htmlFor="terms">
-                <input type="checkbox" name="paymentOption" id="terms" />I have
-                read and agree to the website terms and conditions *
-              </label>
-            </div>
+            <Form.Group
+              className="d-flex gap-1"
+              controlId="terms_and_conditions"
+            >
+              <Controller
+                name="terms_and_conditions"
+                control={control}
+                render={({ field }) => (
+                  <Form.Check
+                    type="checkbox"
+                    label="I accept the"
+                    checked={field.value}
+                    onChange={(e) => {
+                      field.onChange(e.target.checked);
+                    }}
+                  />
+                )}
+              />
+              <Link
+                to={`/terms-and-agreement`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Terms and Conditions
+              </Link>
+            </Form.Group>
+            <ErrorMessage source={errors.terms_and_conditions} />
             <div className="mt-3">
               <Button
-                className="rounded-pill"
+                className={`rounded-pill ${
+                  cartItems.length > 0 ? "" : "disabled"
+                }`}
                 variant="outline-danger"
                 type="submit"
                 size="lg"

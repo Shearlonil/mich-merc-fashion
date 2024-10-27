@@ -86,6 +86,8 @@ const Cart = () => {
     } else {
       // clear button clicked
       clear();
+      setCartItems([]);
+      setTotal(0);
     }
   };
 

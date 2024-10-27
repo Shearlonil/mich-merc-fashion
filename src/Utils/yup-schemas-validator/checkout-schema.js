@@ -18,12 +18,16 @@ const schema = yup.object().shape({
       "Phone number must be valid and more than 10 digits"
     ),
   email: yup.string().required("Email is required"),
+  terms_and_conditions: yup
+    .boolean()
+    .isTrue("Please accept the Terms and Conditions to continue!")
+    .required("Required!"),
   notes: yup.string("A note here"),
   payment_method: yup
     .string()
     .required("Choose a payment method")
     .oneOf(
-      ["credit_card", "cash_on_delivery"],
+      ["credit card", "cash on delivery"],
       "Invalid payment method selected"
     ),
 });

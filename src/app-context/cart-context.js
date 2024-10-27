@@ -133,6 +133,10 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  const getToken = () => {
+    return cartToken;
+  };
+
   const decodeToken = async () => {
     /*  The expiration time in a JWT is represented in epoch timestamp format, also known as Unix time, which is a widely used date and time representation in computing. It measures time by counting the number of non-leap seconds that have passed since 00:00:00 UTC on January 1, 1970, known as the Unix epoch.
         We can convert it to milliseconds by multiplying by 1000 and passing as args to JS Date obj
@@ -173,6 +177,7 @@ export const CartProvider = ({ children }) => {
       clear,
       getCartItems,
       count,
+      getToken,
     }),
     [cartToken]
   );
