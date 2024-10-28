@@ -30,12 +30,14 @@ const Checkout = () => {
   const onSubmit = async (data) => {
     data.cart = getToken();
     try {
-      await purchaseController.checkout(data);
-      toast.info(
-        `Order successful. A mail has been sent to ${data.email} with the transaction id. Please check your spam if not found in inbox`
-      );
-      clear();
-      navigate("/shop");
+      const response = await purchaseController.checkout(data);
+      if (response && response.status === 200) {
+        toast.info(
+          `Order successful. A mail has been sent to ${data.email} with the transaction id. Please check your spam if not found in inbox`
+        );
+        clear();
+        navigate("/shop");
+      }
     } catch (error) {
       toast.error(handleErrMsg(error).msg);
     }

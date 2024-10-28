@@ -16,6 +16,8 @@ import PaginationLite from "../Components/PaginationLite";
 const ViewItems = () => {
   const navigate = useNavigate();
 
+  const { handleRefresh, logout } = useAuth();
+
   const [networkRequest, setNetworkRequest] = useState(false);
   const [products, setProducts] = useState([]);
   const [selectedCat, setSelectedCat] = useState(catOptions[0]);
@@ -38,8 +40,6 @@ const ViewItems = () => {
     pageSize,
     idOffset: 0,
   });
-
-  const { handleRefresh, logout } = useAuth();
 
   const customStyles = {
     control: (provided, state) => ({
@@ -96,7 +96,6 @@ const ViewItems = () => {
       setNetworkRequest(true);
       setPagedData([]);
       const temp = { ...reqBody };
-      console.log("id offset", idOffset);
       temp.idOffset = idOffset;
       temp.pageSpan = pageSpan;
       setReqBody(temp);
