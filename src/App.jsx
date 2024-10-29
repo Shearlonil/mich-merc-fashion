@@ -17,6 +17,7 @@ import Footer from "./Components/Footer";
 import { ToastContainer } from "react-toastify";
 import { ProtectedRoute } from "./Routes/ProtectedRoute";
 import Login from "./Routes/Login";
+import OrderDetails from "./Routes/OrderDetails";
 
 function App() {
   return (
@@ -48,6 +49,11 @@ function App() {
             />
             <Route path="/dashboard/create-items" element={<CreateItems />} />
             <Route path="/dashboard/orders" element={<Orders />} />
+            <Route
+              // order_id represent purchase id
+              path="/dashboard/orders/:order_id"
+              element={<OrderDetails />}
+            />
             <Route path="/dashboard/pw" element={<ChangePw />} />
             <Route index element={<Dashboard />} />
           </Route>

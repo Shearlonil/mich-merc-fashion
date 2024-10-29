@@ -169,9 +169,12 @@ const ViewItems = () => {
       if (response && response.data) {
         setProducts(response.data.products);
         setTotalItemsCount(response.data.count);
-        setIdOffset(
-          response.data.products[response.data.products.length - 1].id
-        );
+        // if not empty arra returnd
+        if (response.data.products.length > 0) {
+          setIdOffset(
+            response.data.products[response.data.products.length - 1].id
+          );
+        }
       }
       setNetworkRequest(false);
     } catch (error) {
@@ -205,9 +208,11 @@ const ViewItems = () => {
         setProducts(response.data.products);
         setPagedData(response.data.products);
         setTotalItemsCount(response.data.count);
-        setIdOffset(
-          response.data.products[response.data.products.length - 1].id
-        );
+        if (response.data.products.length > 0) {
+          setIdOffset(
+            response.data.products[response.data.products.length - 1].id
+          );
+        }
       }
 
       setNetworkRequest(false);

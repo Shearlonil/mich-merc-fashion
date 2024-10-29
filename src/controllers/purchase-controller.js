@@ -5,7 +5,15 @@ const checkout = async (data) => {
 };
 
 const getNewOrders = async () => {
-  return await httpService.get(`/orders`);
+  return await httpService.get(`/orders/list`);
+};
+
+const paginateOrders = async (pageNumber, pageSize, pageSpan, max_order_id) => {
+  return await httpService.post(`/orders/list/${pageNumber}`, {
+    pageSize,
+    max_order_id,
+    pageSpan,
+  });
 };
 
 const orderSearch = async (data) => {
@@ -19,6 +27,7 @@ const paginateOrderSearch = async (data, pageNumber) => {
 export default {
   checkout,
   getNewOrders,
+  paginateOrders,
   orderSearch,
   paginateOrderSearch,
 };
