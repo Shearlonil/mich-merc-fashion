@@ -35,6 +35,7 @@ const OrderDetails = () => {
       //check if the request to fetch item doesn't fail before setting values to display
       if (response && response.data) {
         setSalesRecord(response.data.SalesRecords);
+        setBillingDetails(response.data.BillingDetail);
         setTotal(
           response.data.SalesRecords.reduce(
             (accumulator, currentVal) =>
@@ -97,40 +98,48 @@ const OrderDetails = () => {
     return (
       <Row className="mb-3">
         <div className="my-2" as={Col} xs="12">
-          <p>First Name *</p>
-          <span>First Name *</span>
+          <p>First Name</p>
+          <span>{billingDetails.fname}</span>
         </div>
 
         <div className="my-2" as={Col} xs="12">
-          <p>Last Name *</p>
+          <p>Last Name</p>
+          <span>{billingDetails.lname}</span>
         </div>
 
         <div className="my-2 my-sm-3" as={Col} xs="12">
-          <p>Country / Region *</p>
+          <p>Country / Region</p>
+          <span>{billingDetails.country}</span>
         </div>
 
         <div className="my-2 my-sm-3" as={Col} xs="12">
-          <p>Street address *</p>
+          <p>Street address</p>
+          <span>{billingDetails.street_address}</span>
         </div>
 
         <div className="my-2 my-sm-3" as={Col} xs="12">
-          <p>Town / City *</p>
+          <p>Town / City</p>
+          <span>{billingDetails.city}</span>
         </div>
 
         <div className="my-2 my-sm-3" as={Col} xs="12">
-          <p>State *</p>
+          <p>State</p>
+          <span>{billingDetails.state}</span>
         </div>
 
         <div className="my-2 my-sm-3" as={Col} xs="12">
-          <p>Phone Number *</p>
+          <p>Phone Number</p>
+          <span>{billingDetails.phone}</span>
         </div>
 
         <div className="my-2 my-sm-3" as={Col} xs="12">
-          <p>Email address *</p>
+          <p>Email address</p>
+          <span>{billingDetails.email}</span>
         </div>
 
         <div className="my-2 my-sm-3" as={Col} xs="12">
           <p>Order notes (optional)</p>
+          <span>{billingDetails.OrderNote?.notes}</span>
         </div>
       </Row>
     );
