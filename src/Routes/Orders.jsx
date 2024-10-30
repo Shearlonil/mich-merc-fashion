@@ -30,7 +30,7 @@ const Orders = () => {
       }),
       date_filter: boolean(),
       startDate: date(),
-      endDate: date().min(ref("startDate"), "Please update start date"),
+      endDate: date().min(ref("startDate"), "please update start date"),
     },
     [
       ["order_id", "order_id"], //cyclic dependency
@@ -46,7 +46,7 @@ const Orders = () => {
   const [requestMode, setRequestMode] = useState(0);
 
   // for pagination
-  const [pageSize] = useState(1);
+  const [pageSize] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [maxID, setMaxID] = useState(0);
   const [totalItemsCount, setTotalItemsCount] = useState(0);
@@ -79,31 +79,35 @@ const Orders = () => {
 
   const onsubmit = async (data) => {
     setRequestMode(1);
-    if (!date_filter) {
+    if (date_filter && data.startDate && data.endDate) {
+      data.startDate = format(data.startDate, "yyyy-MM-dd");
+      data.endDate = format(data.endDate, "yyyy-MM-dd");
+    } else {
       delete data.startDate;
       delete data.endDate;
     }
-    console.log(data);
     try {
       resetStates();
       setReqBody(data);
       setNetworkRequest(true);
 
-      // const response = await purchaseController.orderSearch(data);
+      const response = await purchaseController.orderSearch(data);
 
       //check if the request to fetch item doesn't fail before setting values to display
-      // if (response && response.data) {
-      //   setOrders(response.data.orders);
-      //   setTotalItemsCount(response.data.count);
-      //   setMaxID(response.data.orders[response.data.orders.length - 1].id);
-      // }
+      if (response && response.data) {
+        setOrders(response.data.orders);
+        setTotalItemsCount(response.data.count);
+        if (response.data.count > 0) {
+          setMaxID(response.data.orders[response.data.orders.length - 1].id);
+        }
+      }
       setNetworkRequest(false);
     } catch (error) {
       // Incase of 408 Timeout error (Token Expiration), perform refresh
       try {
         if (error.response?.status === 408) {
           await handleRefresh();
-          return performCustomSearch(reqBody);
+          return onsubmit(reqBody);
         }
         // display error message
         toast.error(handleErrMsg(error).msg);
@@ -132,6 +136,7 @@ const Orders = () => {
             break;
           case 1:
             // search button clicked
+            paginateCustomOrderSearch(pageNumber, pageNumber - currentPage);
             break;
         }
       }
@@ -142,11 +147,17 @@ const Orders = () => {
     try {
       setNetworkRequest(true);
       setPagedData([]);
-      const response = await purchaseController.paginateOrders(
-        pageNumber,
-        pageSize,
-        pageSpan,
-        maxID
+
+      const data = { ...reqBody };
+      data.maxID = maxID;
+      data.pageNumber = pageNumber;
+      data.pageSpan = pageSpan;
+      data.pageSize = pageSize;
+      setReqBody(data);
+
+      const response = await purchaseController.paginateOrderSearch(
+        data,
+        pageNumber
       );
 
       //  check if the request to fetch indstries doesn't fail before setting values to display
@@ -165,7 +176,7 @@ const Orders = () => {
       try {
         if (error.response?.status === 408) {
           await handleRefresh();
-          return paginateOrders(pageNumber, pageSpan);
+          return paginateCustomOrderSearch(pageNumber, pageSpan);
         }
         // display error message
         toast.error(handleErrMsg(error).msg);
@@ -231,7 +242,9 @@ const Orders = () => {
         setOrders(response.data.orders);
         setPagedData(response.data.orders);
         setTotalItemsCount(response.data.count);
-        setMaxID(response.data.orders[response.data.orders.length - 1].id);
+        if (response.data.count > 0) {
+          setMaxID(response.data.orders[response.data.orders.length - 1].id);
+        }
       }
 
       setNetworkRequest(false);
@@ -359,7 +372,7 @@ const Orders = () => {
         style={{ boxShadow: "black 3px 2px 5px" }}
       >
         <Row className="align-items-center">
-          <Col sm lg="3" className="mt-3 mt-md-0 col-sm-12 col-md-6">
+          <Col sm lg="3" className="mt-3 mt-md-0">
             <Form.Group className="w-100" as={Col} sm="6" controlId="order_id">
               <Form.Label className="fw-bold">Order ID</Form.Label>
               <Controller
@@ -379,66 +392,63 @@ const Orders = () => {
               <ErrorMessage source={errors.order_id} />
             </Form.Group>
           </Col>
-          {date_filter && (
-            <div className="d-flex col-sm-12 col-md-6 container row">
-              <Col sm lg="3" className="mt-3 mt-md-0 w-50">
-                <Form.Label className="fw-bold">Start Date</Form.Label>
-                <Controller
-                  name="startDate"
-                  control={control}
-                  render={({ field }) => (
-                    <Datetime
-                      {...field}
-                      timeFormat={false}
-                      closeOnSelect={true}
-                      dateFormat="DD/MM/YYYY"
-                      inputProps={{
-                        placeholder: "Choose start date",
-                        className: "form-control",
-                        readOnly: true, // Optional: makes input read-only
-                      }}
-                      onChange={(date) => {
-                        setValue("endDate", date.toDate());
-                        field.onChange(date ? date.toDate() : null);
-                      }}
-                    />
-                  )}
+          <Col sm lg="3" className="mt-3 mt-md-0">
+            <Form.Label className="fw-bold">Start Date</Form.Label>
+            <Controller
+              name="startDate"
+              control={control}
+              render={({ field }) => (
+                <Datetime
+                  {...field}
+                  timeFormat={false}
+                  closeOnSelect={true}
+                  dateFormat="DD/MM/YYYY"
+                  inputProps={{
+                    disabled: !date_filter,
+                    placeholder: "Choose start date",
+                    className: "form-control",
+                    readOnly: true, // Optional: makes input read-only
+                  }}
+                  onChange={(date) => {
+                    setValue("endDate", date.toDate());
+                    field.onChange(date ? date.toDate() : null);
+                  }}
                 />
-                <ErrorMessage source={errors.startDate} />
-              </Col>
-              <Col sm lg="3" className="mt-3 mt-md-0 w-50">
-                <Form.Label className="fw-bold">End Date</Form.Label>
-                <Controller
-                  name="endDate"
-                  control={control}
-                  render={({ field }) => (
-                    <Datetime
-                      {...field}
-                      timeFormat={false}
-                      closeOnSelect={true}
-                      dateFormat="DD/MM/YYYY"
-                      inputProps={{
-                        placeholder: "Choose end date",
-                        className: "form-control",
-                        readOnly: true, // Optional: makes input read-only
-                      }}
-                      onChange={(date) =>
-                        field.onChange(date ? date.toDate() : null)
-                      }
-                      isValidDate={(current) => {
-                        // Ensure end date is after start date
-                        return (
-                          !startDate || current.isSameOrAfter(startDate, "day")
-                        );
-                      }}
-                    />
-                  )}
+              )}
+            />
+            <ErrorMessage source={errors.startDate} />
+          </Col>
+          <Col sm lg="3" className="mt-3 mt-md-0">
+            <Form.Label className="fw-bold">End Date</Form.Label>
+            <Controller
+              name="endDate"
+              control={control}
+              render={({ field }) => (
+                <Datetime
+                  {...field}
+                  timeFormat={false}
+                  closeOnSelect={true}
+                  dateFormat="DD/MM/YYYY"
+                  inputProps={{
+                    disabled: !date_filter,
+                    placeholder: "Choose end date",
+                    className: "form-control",
+                    readOnly: true, // Optional: makes input read-only
+                  }}
+                  onChange={(date) =>
+                    field.onChange(date ? date.toDate() : null)
+                  }
+                  isValidDate={(current) => {
+                    // Ensure end date is after start date
+                    return (
+                      !startDate || current.isSameOrAfter(startDate, "day")
+                    );
+                  }}
                 />
-                <ErrorMessage source={errors.endDate} />
-              </Col>
-            </div>
-          )}
-
+              )}
+            />
+            <ErrorMessage source={errors.endDate} />
+          </Col>
           <Col sm lg="3" className="align-self-end text-center mt-3">
             <Button className="w-100" onClick={handleSubmit(onsubmit)}>
               Search

@@ -16,6 +16,10 @@ const paginateOrders = async (pageNumber, pageSize, pageSpan, max_order_id) => {
   });
 };
 
+const searchByPurchaseOrderID = async (id) => {
+  return await httpService.get(`/orders/search/${id}`);
+};
+
 const orderSearch = async (data) => {
   return await httpService.post(`/orders/search`, data);
 };
@@ -28,6 +32,7 @@ export default {
   checkout,
   getNewOrders,
   paginateOrders,
+  searchByPurchaseOrderID,
   orderSearch,
   paginateOrderSearch,
 };
