@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "../app-context/auth-user-context";
 import handleErrMsg from "../Utils/error-handler";
 import purchaseController from "../controllers/purchase-controller";
+import ConfirmDialogComp from "../Components/ConfirmDialogComp";
 
 const OrderDetails = () => {
   const { order_id } = useParams();
@@ -19,6 +20,10 @@ const OrderDetails = () => {
   const [total, setTotal] = useState(0);
   const [billingDetails, setBillingDetails] = useState({});
   const [salesRecord, setSalesRecord] = useState([]);
+  const [purchaseOrder, setPurchaseOrder] = useState({});
+
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [displayMsg, setDisplayMsg] = useState("");
 
   useEffect(() => {
     initialize();
@@ -34,6 +39,7 @@ const OrderDetails = () => {
 
       //check if the request to fetch item doesn't fail before setting values to display
       if (response && response.data) {
+        setPurchaseOrder(response.data);
         setSalesRecord(response.data.SalesRecords);
         setBillingDetails(response.data.BillingDetail);
         setTotal(
@@ -55,6 +61,44 @@ const OrderDetails = () => {
         if (error.response?.status === 408) {
           await handleRefresh();
           return initialize();
+        }
+        // display error message
+        toast.error(handleErrMsg(error).msg);
+      } catch (error) {
+        // if error while refreshing, logout and delete all cookies
+        logout();
+      }
+      setNetworkRequest(false);
+    }
+  };
+
+  const openConfirmDialog = () => {
+    setDisplayMsg("Complete Order? Set status to Delivered?");
+    setShowConfirmModal(true);
+  };
+
+  const closeConfirmModal = () => {
+    setShowConfirmModal(false);
+  };
+
+  // confirmation for updating order... setting status to 1 (delivered)
+  const handleConfirmAction = async () => {
+    setShowConfirmModal(false);
+    try {
+      setNetworkRequest(true);
+
+      await purchaseController.changeOrderStatus(order_id);
+      toast.info("Status successfully upgraded");
+      const temp = { ...purchaseOrder };
+      temp.status = true;
+      setPurchaseOrder(temp);
+      setNetworkRequest(false);
+    } catch (error) {
+      // Incase of 408 Timeout error (Token Expiration), perform refresh
+      try {
+        if (error.response?.status === 408) {
+          await handleRefresh();
+          return handleConfirmAction();
         }
         // display error message
         toast.error(handleErrMsg(error).msg);
@@ -99,42 +143,44 @@ const OrderDetails = () => {
       <Row className="mb-3">
         <div className="my-2" as={Col} xs="12">
           <p>First Name</p>
-          <span>{billingDetails.fname}</span>
+          <span className="text-success fw-bold">{billingDetails.fname}</span>
         </div>
 
         <div className="my-2" as={Col} xs="12">
           <p>Last Name</p>
-          <span>{billingDetails.lname}</span>
+          <span className="text-success fw-bold">{billingDetails.lname}</span>
         </div>
 
         <div className="my-2 my-sm-3" as={Col} xs="12">
           <p>Country / Region</p>
-          <span>{billingDetails.country}</span>
+          <span className="text-success fw-bold">{billingDetails.country}</span>
         </div>
 
         <div className="my-2 my-sm-3" as={Col} xs="12">
           <p>Street address</p>
-          <span>{billingDetails.street_address}</span>
+          <span className="text-success fw-bold">
+            {billingDetails.street_address}
+          </span>
         </div>
 
         <div className="my-2 my-sm-3" as={Col} xs="12">
           <p>Town / City</p>
-          <span>{billingDetails.city}</span>
+          <span className="text-success fw-bold">{billingDetails.city}</span>
         </div>
 
         <div className="my-2 my-sm-3" as={Col} xs="12">
           <p>State</p>
-          <span>{billingDetails.state}</span>
+          <span className="text-success fw-bold">{billingDetails.state}</span>
         </div>
 
         <div className="my-2 my-sm-3" as={Col} xs="12">
           <p>Phone Number</p>
-          <span>{billingDetails.phone}</span>
+          <span className="text-success fw-bold">{billingDetails.phone}</span>
         </div>
 
         <div className="my-2 my-sm-3" as={Col} xs="12">
           <p>Email address</p>
-          <span>{billingDetails.email}</span>
+          <span className="text-success fw-bold">{billingDetails.email}</span>
         </div>
 
         <div className="my-2 my-sm-3" as={Col} xs="12">
@@ -216,6 +262,27 @@ const OrderDetails = () => {
                 Details
               </span>
             </h3>
+            {!networkRequest && (
+              <h5>
+                ID:{" "}
+                <span className="text-success">{purchaseOrder.order_id}</span>
+              </h5>
+            )}
+            {networkRequest && <Skeleton />}
+            {!networkRequest && (
+              <h5>
+                Status:{" "}
+                <span
+                  className={`text-${
+                    purchaseOrder.status ? "success" : "danger"
+                  }`}
+                >
+                  {purchaseOrder.status ? "Completed" : "In progress"}
+                </span>
+              </h5>
+            )}
+            {networkRequest && <Skeleton />}
+
             <hr />
             <div className="d-flex border border-light my-2 shadow-sm">
               <span className="me-auto my-2 p-2 fw-bold h5">Product</span>
@@ -233,17 +300,16 @@ const OrderDetails = () => {
             </div>
             <hr />
 
-            <div className="border border-light my-2 shadow-sm p-3">
-              <p>Payment Method</p>
-            </div>
-
             <div className="mt-3">
               <Button
-                className={`rounded-pill ${networkRequest ? "disabled" : ""}`}
+                className={`rounded-pill ${networkRequest ? "disabled" : ""} ${
+                  !networkRequest && purchaseOrder.status ? "disabled" : ""
+                }
+                }`}
                 variant="outline-danger"
                 type="submit"
                 size="lg"
-                // onClick={handleSubmit(onSubmit)}
+                onClick={() => openConfirmDialog()}
               >
                 Complete
               </Button>
@@ -251,6 +317,13 @@ const OrderDetails = () => {
           </div>
         </div>
       </div>
+
+      <ConfirmDialogComp
+        show={showConfirmModal}
+        handleClose={closeConfirmModal}
+        handleConfirm={handleConfirmAction}
+        message={displayMsg}
+      />
     </div>
   );
 };

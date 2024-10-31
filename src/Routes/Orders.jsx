@@ -281,7 +281,16 @@ const Orders = () => {
               <div className="d-flex">
                 <div className="ms-3">
                   <h2 className="mb-2">{fname}</h2>
-                  <span className="mb-2 text-primary">{email}</span>
+                  <div className="d-flex flex-column">
+                    <span className="text-primary">{email}</span>
+                    <span
+                      className={`text-${
+                        PurchaseOrder.status ? "success" : "danger"
+                      }`}
+                    >
+                      {PurchaseOrder.status ? "Completed" : "In progress"}
+                    </span>
+                  </div>
                   <p className="mb-2">{PurchaseOrder.order_id}</p>
                   <button
                     className={`btn btn-sm btn-outline-danger px-3 rounded-pill`}

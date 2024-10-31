@@ -4,6 +4,10 @@ const checkout = async (data) => {
   return await httpService.post(`/orders/checkout`, data);
 };
 
+const changeOrderStatus = async (purchase_order_id) => {
+  return await httpService.put(`/orders/status/${purchase_order_id}`);
+};
+
 const getNewOrders = async () => {
   return await httpService.get(`/orders/list`);
 };
@@ -30,6 +34,7 @@ const paginateOrderSearch = async (data, pageNumber) => {
 
 export default {
   checkout,
+  changeOrderStatus,
   getNewOrders,
   paginateOrders,
   searchByPurchaseOrderID,
