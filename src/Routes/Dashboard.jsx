@@ -80,7 +80,7 @@ const Dashboard = () => {
           </Link>
         </Col>
         <Col className="p-3" xs={"12"} md={"6"}>
-          <Link className=" text-decoration-none" to={"pw"}>
+          <Link className=" text-decoration-none" to={"tc"}>
             <Card className="bg-warning-subtle d-flex align-items-center">
               <img
                 style={{ maxWidth: "300px", width: "100%", height: "300px" }}

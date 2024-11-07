@@ -6,6 +6,11 @@ import "react-toastify/dist/ReactToastify.css";
 import "react-loading-skeleton/dist/skeleton.css";
 
 import "./index.css";
+
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.bubble.css";
+import "quill/dist/quill.snow.css";
+
 import App from "./App.jsx";
 import "bootstrap/dist/js/bootstrap.bundle.js";
 import { AuthProvider } from "./app-context/auth-user-context.js";

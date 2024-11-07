@@ -11,11 +11,16 @@ import { useAuth } from "../app-context/auth-user-context";
 import { ThreeDotLoading } from "../Components/react-loading-indicators/Indicator";
 import handleErrMsg from "../Utils/error-handler";
 import itemController from "../controllers/item-controller";
+import ConfirmDialogComp from "../Components/ConfirmDialogComp";
 
 const Discount = () => {
   const [networkRequest, setNetworkRequest] = useState(false);
 
   const { handleRefresh, getCurrentYear, logout } = useAuth();
+
+  const [showModal, setShowModal] = useState(false);
+  const [displayMsg, setDisplayMsg] = useState("");
+  const [formData, setFormData] = useState({});
 
   const schema = yup.object().shape({
     discount: yup.number().required("Discount is required!"),
@@ -31,16 +36,30 @@ const Discount = () => {
   });
 
   const onSubmit = async (data) => {
+    setFormData(data);
+    handleOpenModal();
+  };
+
+  const handleOpenModal = () => {
+    setDisplayMsg(`Update discount for all items?`);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => setShowModal(false);
+
+  const handleConfirmAction = async () => {
     try {
       setNetworkRequest(true);
-      await itemController.setGeneralDiscount(data.discount);
+      await itemController.setGeneralDiscount(formData.discount);
+      setShowModal(false);
+      toast.info("Discount updated for all items");
       setNetworkRequest(false);
     } catch (error) {
       // Incase of 408 Timeout error (Token Expiration), perform refresh
       try {
         if (error.response?.status === 408) {
           await handleRefresh();
-          return onSubmit(data);
+          return handleConfirmAction();
         }
         // display error message
         toast.error(handleErrMsg(error).msg);
@@ -102,6 +121,12 @@ const Discount = () => {
           </main>
         </div>
       </div>
+      <ConfirmDialogComp
+        show={showModal}
+        handleClose={handleCloseModal}
+        handleConfirm={handleConfirmAction}
+        message={displayMsg}
+      />
     </div>
   );
 };

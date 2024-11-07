@@ -77,7 +77,7 @@ const ProductCard = ({ productInfo }) => {
             <div className="d-flex align-items-center justify-content-between">
               <Link
                 to={`/product/${id}`}
-                className={` w-100 btn btn-outline-danger rounded-pill ${
+                className={` w-100 btn btn-outline-primary rounded-pill ${
                   price === 0 ? "disabled" : ""
                 }`}
               >

@@ -19,6 +19,7 @@ import Login from "./Routes/Login";
 import OrderDetails from "./Routes/OrderDetails";
 import PageNotFound from "./Routes/PageNotFound";
 import Discount from "./Routes/Discounts";
+import ReviewTermsAndAgreement from "./Routes/ReviewTermsAndAgreement";
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
           <Route path="/dashboard" element={<ProtectedRoute />}>
             <Route path="/dashboard/view-items" element={<ViewItems />} />
             <Route path="/dashboard/discounts" element={<Discount />} />
+            <Route path="/dashboard/tc" element={<ReviewTermsAndAgreement />} />
             <Route
               path="/dashboard/view-items/details/:id"
               element={<ViewItemsDetails />}
