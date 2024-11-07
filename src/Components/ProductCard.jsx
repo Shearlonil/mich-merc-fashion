@@ -17,7 +17,7 @@ const ProductCard = ({ productInfo }) => {
   const displayDiscount = () => {
     return (
       <div>
-        <h2 className="poppins">
+        <h2 className="poppins mb-0">
           <span className="poppins text-dark fw-bold">
             £
             {numeral(price)
@@ -41,7 +41,7 @@ const ProductCard = ({ productInfo }) => {
 
   const displayPrice = () => {
     return (
-      <h4>
+      <h4 className="mb-0">
         <span>£{numeral(price).value()}</span>
       </h4>
     );
@@ -51,33 +51,33 @@ const ProductCard = ({ productInfo }) => {
     <Wrapper>
       <div>
         <Card
-          style={{ minHeight: "500px", maxHeight: "500px" }}
-          className="gap-2 m-2 border-0 rounded-1 bg-light"
+          style={{ minHeight: "400px", maxHeight: "400px" }}
+          className="gap-0 m-2 border-0 rounded-1 bg-light"
         >
           {/* ItemImages is an array of images attached to the item. Select the first */}
           <ImageComponent image={ItemImages[0]} />
           <Card.Header>
-            <h4 className="fw-bold" style={{ color: "#050580" }}>
+            <h6 className="fw-boldmb-0" style={{ color: "#050580" }}>
               <EllipsisText
                 styles={{ style: { fontFamily: "serif" } }}
                 message={title}
                 maxLength={30}
                 clickable={false}
               />
-            </h4>
+            </h6>
           </Card.Header>
           <Card.Body className="d-flex flex-column justify-content-between">
             <Card.Title className="">
               {discount && discount > 0 && displayDiscount()}
               {discount && discount == 0 && displayPrice()}
             </Card.Title>
-            <Card.Text>
+            {/* <Card.Text>
               <EllipsisText message={desc} maxLength={40} clickable={false} />
-            </Card.Text>
+            </Card.Text> */}
             <div className="d-flex align-items-center justify-content-between">
               <Link
                 to={`/product/${id}`}
-                className={`btn btn-outline-danger rounded-pill ${
+                className={` w-100 btn btn-outline-danger rounded-pill ${
                   price === 0 ? "disabled" : ""
                 }`}
               >

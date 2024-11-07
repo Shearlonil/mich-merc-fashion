@@ -142,13 +142,10 @@ const OrderDetails = () => {
     return (
       <Row className="mb-3">
         <div className="my-2" as={Col} xs="12">
-          <p>First Name</p>
-          <span className="text-success fw-bold">{billingDetails.fname}</span>
-        </div>
-
-        <div className="my-2" as={Col} xs="12">
-          <p>Last Name</p>
-          <span className="text-success fw-bold">{billingDetails.lname}</span>
+          <p>Full Name</p>
+          <span className="text-success fw-bold">
+            {billingDetails.full_name}
+          </span>
         </div>
 
         <div className="my-2 my-sm-3" as={Col} xs="12">

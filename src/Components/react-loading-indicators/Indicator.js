@@ -14,7 +14,7 @@ import {
 
 /*  ref: https://react-loading-indicators.netlify.app/
     easing: linear, ease-in-out, ease-in
-    OrbitProgress variant: disc, split-disc, bubble-dotted, dotted, track-disc
+    OrbitProgress variant: disc, split-disc, dotted, track-disc, spokes
     ThreeDot variant: pulsate, windmill, bob, brick-stack
 */
 

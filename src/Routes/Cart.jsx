@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import numeral from "numeral";
 import { MdAdd } from "react-icons/md";
 import { MdRemove } from "react-icons/md";
@@ -8,16 +7,20 @@ import { toast } from "react-toastify";
 import { useCart } from "../app-context/cart-context";
 import ImageComponent from "../Components/ImageComponent";
 import ConfirmDialogComp from "../Components/ConfirmDialogComp";
+import purchaseController from "../controllers/purchase-controller";
+import handleErrMsg from "../Utils/error-handler";
+import { OribitalLoading } from "../Components/react-loading-indicators/Indicator";
 
 const Cart = () => {
-  const navigate = useNavigate();
+  const [networkRequest, setNetworkRequest] = useState(false);
 
   const [total, setTotal] = useState(0);
   const [cartItems, setCartItems] = useState([]);
   // for controlling the increment and decrement buttons while updating cart
   const [updating, setUpdating] = useState(false);
 
-  const { getCartItems, updateCart, removeFromCart, clear } = useCart();
+  const { getCartItems, getToken, updateCart, removeFromCart, clear } =
+    useCart();
 
   const [showModal, setShowModal] = useState(false);
   const [displayMsg, setDisplayMsg] = useState("");
@@ -149,6 +152,20 @@ const Cart = () => {
     }
   };
 
+  const createCheckoutSession = async () => {
+    try {
+      setNetworkRequest(true);
+      const response = await purchaseController.checkout({ cart: getToken() });
+
+      if (response.data && response.data.url) {
+        window.location.href = response.data.url;
+      }
+    } catch (error) {
+      toast.error(handleErrMsg(error).msg);
+      setNetworkRequest(false);
+    }
+  };
+
   return (
     <div className="container">
       <h1 className="mt-4">
@@ -245,7 +262,7 @@ const Cart = () => {
           <button
             className={`btn btn-sm btn-outline-danger px-3 rounded-pill ${
               cartItems.length > 0 ? "" : "disabled"
-            }`}
+            } ${networkRequest ? "disabled" : ""}`}
             onClick={() => handleOpenModal()}
           >
             Clear Cart
@@ -254,10 +271,13 @@ const Cart = () => {
           <button
             className={`btn btn-lg btn-outline-dark px-3 rounded-pill ${
               cartItems.length > 0 ? "" : "disabled"
-            }`}
-            onClick={() => navigate("checkout")}
+            } ${networkRequest ? "disabled" : ""}`}
+            onClick={createCheckoutSession}
           >
-            Checkout
+            {!networkRequest && "Checkout"}
+            {networkRequest && (
+              <OribitalLoading size="small" variant="spokes" />
+            )}
           </button>
         </div>
       </div>

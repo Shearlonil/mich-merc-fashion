@@ -9,15 +9,16 @@ import CreateItems from "./Routes/CreateItems";
 import Orders from "./Routes/Orders";
 import ChangePw from "./Routes/ChangePw";
 import ViewItemsDetails from "./Routes/ViewItemsDetails";
-import Test from "./Routes/Test";
+import CheckoutSuccess from "./Routes/CheckoutSuccess";
 import Cart from "./Routes/Cart";
-import Checkout from "./Routes/Checkout";
 import NavBar from "./Components/Navbar";
 import Footer from "./Components/Footer";
 import { ToastContainer } from "react-toastify";
 import { ProtectedRoute } from "./Routes/ProtectedRoute";
 import Login from "./Routes/Login";
 import OrderDetails from "./Routes/OrderDetails";
+import PageNotFound from "./Routes/PageNotFound";
+import Discount from "./Routes/Discounts";
 
 function App() {
   return (
@@ -34,7 +35,7 @@ function App() {
 
           {/* Cart */}
           <Route path="/cart" element={<Cart />} />
-          <Route path="/cart/checkout" element={<Checkout />} />
+          <Route path="/cart/checkout-success" element={<CheckoutSuccess />} />
 
           {/* Shop */}
           <Route path="/shop" element={<Shop />} />
@@ -43,6 +44,7 @@ function App() {
           {/* Dashboard */}
           <Route path="/dashboard" element={<ProtectedRoute />}>
             <Route path="/dashboard/view-items" element={<ViewItems />} />
+            <Route path="/dashboard/discounts" element={<Discount />} />
             <Route
               path="/dashboard/view-items/details/:id"
               element={<ViewItemsDetails />}
@@ -57,8 +59,7 @@ function App() {
             <Route path="/dashboard/pw" element={<ChangePw />} />
             <Route index element={<Dashboard />} />
           </Route>
-
-          <Route path="/test" element={<Test />} />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       </div>
       <div className="mt-auSto">

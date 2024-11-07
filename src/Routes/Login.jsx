@@ -74,7 +74,7 @@ const Login = () => {
                 // width="90"
                 height="120"
               />
-              <h1 className="h3 mb-3 fw-normal text-white">Sign In Page</h1>
+              <h1 className="h3 mb-3 fw-normal">Sign In Page</h1>
 
               <div className="form-floating mb-3">
                 <input
@@ -113,7 +113,7 @@ const Login = () => {
                 )}
                 {!isLoggingIn && `Sign In`}
               </button>
-              <p className="mt-5 mb-3 text-white">&copy; {getCurrentYear()}</p>
+              <p className="mb-3">&copy; {getCurrentYear()}</p>
             </Form>
           </main>
         </div>

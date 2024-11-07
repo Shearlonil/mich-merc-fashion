@@ -47,6 +47,10 @@ const updateImgs = async (item_id, data) => {
   return await httpService.put(`/items/imgs/update/${item_id}`, formData);
 };
 
+const setGeneralDiscount = async (disc) => {
+  return await httpService.put(`/items/discounts/${disc}`);
+};
+
 const random = async (limit) => {
   return await httpService.get(`/items/random/${limit}`);
 };
@@ -97,6 +101,7 @@ export default {
   findById,
   unlinkImg,
   updateImgs,
+  setGeneralDiscount,
   random,
   randomFetchWithCat,
   fetchRecentItemsByCatID,
