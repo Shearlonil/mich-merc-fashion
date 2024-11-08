@@ -20,6 +20,7 @@ import OrderDetails from "./Routes/OrderDetails";
 import PageNotFound from "./Routes/PageNotFound";
 import Discount from "./Routes/Discounts";
 import ReviewTermsAndAgreement from "./Routes/ReviewTermsAndAgreement";
+import TermsAndAgreement from "./Routes/tc";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <NavBar />
         <Routes>
           <Route index path={"/"} element={<Home />} />
+          <Route index path={"/terms"} element={<TermsAndAgreement />} />
           <Route path="/about" element={<Home />} />
           <Route path="/product/:id" element={<Product />} />
 

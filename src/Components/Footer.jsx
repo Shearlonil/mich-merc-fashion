@@ -26,54 +26,61 @@ const Footer = () => {
               elit. Ducimus, error?
             </p>
           </div>
-          <ul className="col-12 col-md-4 list-unstyled d-flex justify-content-center gap-3 align-items-center m-0 my-2">
-            <li>
-              <a
-                className="link-body-emphasis"
-                target="_blank"
-                href="https://wa.me/"
-              >
-                <IoLogoWhatsapp size="28" />
-              </a>
-            </li>
-            <li>
-              <a
-                className="link-body-emphasis"
-                target="_blank"
-                href="https://www.instagram.com/*"
-              >
-                <IoLogoInstagram size="28" />
-              </a>
-            </li>
-            <li>
-              <a
-                className="link-body-emphasis"
-                target="_blank"
-                href="https://www.linkedin.com/in/*"
-              >
-                <GrLinkedinOption size="28" />
-              </a>
-            </li>
-            <li>
-              <a
-                className="link-body-emphasis"
-                target="_blank"
-                href="https://www.facebook.com/*"
-              >
-                <FaFacebook size="28" />
-              </a>
-            </li>
+          <div className="col-12 col-md-4 align-items-center  justify-content-center d-flex flex-column">
+            <ul className="list-unstyled d-flex gap-3  m-0 my-2">
+              <li>
+                <a
+                  className="link-body-emphasis"
+                  target="_blank"
+                  href="https://wa.me/"
+                >
+                  <IoLogoWhatsapp size="28" />
+                </a>
+              </li>
+              <li>
+                <a
+                  className="link-body-emphasis"
+                  target="_blank"
+                  href="https://www.instagram.com/*"
+                >
+                  <IoLogoInstagram size="28" />
+                </a>
+              </li>
+              <li>
+                <a
+                  className="link-body-emphasis"
+                  target="_blank"
+                  href="https://www.linkedin.com/in/*"
+                >
+                  <GrLinkedinOption size="28" />
+                </a>
+              </li>
+              <li>
+                <a
+                  className="link-body-emphasis"
+                  target="_blank"
+                  href="https://www.facebook.com/*"
+                >
+                  <FaFacebook size="28" />
+                </a>
+              </li>
 
-            <li>
-              <a
-                className="link-body-emphasis"
-                target="_blank"
-                href="mailto:admin@hello.com"
-              >
-                <SiGmail size="28" />
+              <li>
+                <a
+                  className="link-body-emphasis"
+                  target="_blank"
+                  href="mailto:admin@hello.com"
+                >
+                  <SiGmail size="28" />
+                </a>
+              </li>
+            </ul>
+            <ul>
+              <a className="link-body-emphasis" href="/terms">
+                i accept the terms and conditions
               </a>
-            </li>
-          </ul>
+            </ul>
+          </div>
         </footer>
       </div>
     </div>

@@ -1,12 +1,15 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { Button, Card, Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { formatDistanceToNow } from "date-fns";
 
 import ConfirmDialogComp from "../Components/ConfirmDialogComp";
 import { ThreeDotLoading } from "../Components/react-loading-indicators/Indicator";
 import { useAuth } from "../app-context/auth-user-context";
 import handleErrMsg from "../Utils/error-handler";
+import genericController from "../controllers/generic-controller";
+import staffController from "../controllers/staff-controller";
 
 import editorSchema from "../Utils/quill-schema";
 import Editor from "../Components/quill/quill-editor";
@@ -29,6 +32,51 @@ const ReviewTermsAndAgreement = () => {
   const [showModal, setShowModal] = useState(false);
   const [displayMsg, setDisplayMsg] = useState("");
 
+  useEffect(() => {
+    initialize();
+  }, []);
+
+  const initialize = async () => {
+    try {
+      setNetworkRequest(true);
+      const urls = ["/terms/get"];
+      const response = await genericController.performGetRequests(urls);
+      const { 0: terms } = response;
+
+      //  check if the request to fetch locations doesn't fail before setting values to display
+      if (terms && terms.data) {
+        setNetworkRequest(false);
+        setTermsAndAgreement(terms.data);
+        // const quillData = JSON.parse(terms.data.value);
+        const quillData = terms.data.value;
+        let content = new Delta();
+        quillData.forEach((element) => {
+          content.insert(element.insert, element.attributes);
+        });
+        quillRef.current.setContents(content);
+      }
+      setNetworkRequest(false);
+    } catch (error) {
+      // Incase of 408 Timeout error (Token Expiration), perform refresh
+      try {
+        if (error.response?.status === 408) {
+          await handleRefresh();
+          return initialize();
+        }
+        // Incase of 401 Unauthorized, navigate to 404
+        if (error.response?.status === 401) {
+          navigate("/dashboard");
+        }
+        // display error message
+        toast.error(handleErrMsg(error).msg);
+      } catch (error) {
+        // if error while refreshing, logout and delete all cookies
+        logout();
+      }
+      setNetworkRequest(false);
+    }
+  };
+
   const handleOpenModal = () => {
     setDisplayMsg("Update Terms and Conditions");
     setShowModal(true);
@@ -45,8 +93,9 @@ const ReviewTermsAndAgreement = () => {
       if (!isValid) {
         toast.error("Please enter/edit Terms and Conditions");
       } else {
-        // await staffController.updateTermsAndAgreement(ops);
+        await staffController.updateTermsAndAgreement(ops);
       }
+      toast.info("Terms and Conditions updated successfully");
       setNetworkRequest(false);
     } catch (error) {
       // Incase of 408 Timeout error (Token Expiration), perform refresh
