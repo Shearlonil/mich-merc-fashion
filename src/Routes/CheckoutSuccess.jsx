@@ -9,7 +9,7 @@ const CheckoutSuccess = () => {
   const { clear } = useCart();
 
   useEffect(() => {
-    // clear();
+    clear();
   }, []);
 
   return (

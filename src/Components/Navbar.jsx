@@ -134,14 +134,14 @@ const NavBar = () => {
               >
                 SHOP
               </Link>
-              <Link
+              {/* <Link
                 className="navbar-nav nav-item p-2 text-decoration-none nav-link"
                 style={{ fontSize: "1.2em", fontVariant: "all-small-caps" }}
                 to={"/contact-us"}
                 onClick={handleNavSelect}
               >
                 CONTACT US
-              </Link>
+              </Link> */}
               {user && (
                 <Link
                   className="navbar-nav nav-item p-2 text-decoration-none nav-link"
