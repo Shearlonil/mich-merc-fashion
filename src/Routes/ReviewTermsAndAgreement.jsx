@@ -47,8 +47,8 @@ const ReviewTermsAndAgreement = () => {
       if (terms && terms.data) {
         setNetworkRequest(false);
         setTermsAndAgreement(terms.data);
-        // const quillData = JSON.parse(terms.data.value);
-        const quillData = terms.data.value;
+        const quillData = JSON.parse(terms.data.value);
+        // const quillData = terms.data.value;
         let content = new Delta();
         quillData.forEach((element) => {
           content.insert(element.insert, element.attributes);
