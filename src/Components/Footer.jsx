@@ -2,7 +2,7 @@ import React from "react";
 import { FaFacebook } from "react-icons/fa";
 import { GrLinkedinOption } from "react-icons/gr";
 import { IoLogoInstagram, IoLogoWhatsapp } from "react-icons/io";
-import { SiGmail } from "react-icons/si";
+import { FaYahoo } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import IMAGES from "../images/images";
 import { useAuth } from "../app-context/auth-user-context";
@@ -32,7 +32,7 @@ const Footer = () => {
                 <a
                   className="link-body-emphasis"
                   target="_blank"
-                  href="https://wa.me/"
+                  href="https://wa.me/+447983472603"
                 >
                   <IoLogoWhatsapp size="28" />
                 </a>
@@ -41,12 +41,12 @@ const Footer = () => {
                 <a
                   className="link-body-emphasis"
                   target="_blank"
-                  href="https://www.instagram.com/*"
+                  href="https://www.instagram.com/michmercltd20"
                 >
                   <IoLogoInstagram size="28" />
                 </a>
               </li>
-              <li>
+              {/* <li>
                 <a
                   className="link-body-emphasis"
                   target="_blank"
@@ -54,12 +54,12 @@ const Footer = () => {
                 >
                   <GrLinkedinOption size="28" />
                 </a>
-              </li>
+              </li> */}
               <li>
                 <a
                   className="link-body-emphasis"
                   target="_blank"
-                  href="https://www.facebook.com/*"
+                  href="https://www.facebook.com/Michmercfashionworld.co.uk?sfnsn=scwspwa"
                 >
                   <FaFacebook size="28" />
                 </a>
@@ -69,15 +69,15 @@ const Footer = () => {
                 <a
                   className="link-body-emphasis"
                   target="_blank"
-                  href="mailto:admin@hello.com"
+                  href="mailto:michmerclimited@yahoo.com"
                 >
-                  <SiGmail size="28" />
+                  <FaYahoo size="28" />
                 </a>
               </li>
             </ul>
             <ul>
               <a className="link-body-emphasis" href="/terms">
-                i accept the terms and conditions
+                Terms and Conditions
               </a>
             </ul>
           </div>

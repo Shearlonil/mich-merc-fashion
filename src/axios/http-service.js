@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 // axios.defaults.baseURL = "https://listmify.com";
-// axios.defaults.baseURL = "https://www.kiddiesandme.co.uk";
+// axios.defaults.baseURL = "https://www.michmerc.co.uk";
 axios.defaults.baseURL = "http://localhost:2024";
 
 // ref: https://stackoverflow.com/questions/43002444/make-axios-send-cookies-in-its-requests-automatically
