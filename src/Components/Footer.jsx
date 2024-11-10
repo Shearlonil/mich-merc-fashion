@@ -1,6 +1,7 @@
 import React from "react";
 import { FaFacebook } from "react-icons/fa";
 import { GrLinkedinOption } from "react-icons/gr";
+import { FaLocationDot } from "react-icons/fa6";
 import { IoLogoInstagram, IoLogoWhatsapp } from "react-icons/io";
 import { FaYahoo } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -20,8 +21,9 @@ const Footer = () => {
             </Link>
             <p className="mb-0">&copy; {getCurrentYear()} Company, Inc</p>
           </div>
-          <div className="col-12 col-md-4 text-center d-flex flex-column justify-content-center align-items-center">
-            <p>69 Harptree Drive ME5 OTF</p>
+          <div className="col-12 col-md-4 text-center d-flex flex-row justify-content-center align-items-center">
+            <FaLocationDot size="28" />
+            <span className="ms-2">Harptree Drive ME5 OTF</span>
           </div>
           <div className="col-12 col-md-4 align-items-center  justify-content-center d-flex flex-column">
             <ul className="list-unstyled d-flex gap-3  m-0 my-2">
