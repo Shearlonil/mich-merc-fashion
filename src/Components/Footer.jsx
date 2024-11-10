@@ -21,10 +21,7 @@ const Footer = () => {
             <p className="mb-0">&copy; {getCurrentYear()} Company, Inc</p>
           </div>
           <div className="col-12 col-md-4 text-center d-flex flex-column justify-content-center align-items-center">
-            <p>
-              Address here... LOREM ipsum dolor sit amet consectetur adipisicing
-              elit. Ducimus, error?
-            </p>
+            <p>69 Harptree Drive ME5 OTF</p>
           </div>
           <div className="col-12 col-md-4 align-items-center  justify-content-center d-flex flex-column">
             <ul className="list-unstyled d-flex gap-3  m-0 my-2">
